@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">通讯录</string>
+    <string name="title_history">通话记录</string>
+    <string name="title_contacts">联系人</string>
+    <string name="title_favorite">收藏</string>
+    <string name="hello_blank_fragment">空Fragment</string>
+    <string name="search_contact">搜索联系人</string>
+    <string name="add_contact">添加联系人</string>
+    <string name="contact_name_placeholder">联系人姓名</string>
+    <string name="contact_avatar_des">联系人头像</string>
+</resources>
