@@ -8,4 +8,18 @@
     <string name="add_contact">Add Contact</string>
     <string name="contact_name_placeholder">Contact name</string>
     <string name="contact_avatar_des">Contact avatar</string>
+    <string name="contact_details">Username</string>
+    <string name="contact_details_number">Number</string>
+    <string name="contact_details_avatar_des">Avatar</string>
+    <string name="contact_details_info">Details</string>
+    <string name="contact_details_title">RECENT CALLS</string>
+    <string name="contact_details_settings_title">SETTINGS</string>
+    <string name="message_button_des">message</string>
+    <string name="call_button_des">Call</string>
+    <string name="contact_details_number_des">Phone Number</string>
+    <string name="contact_search_des">Search Contact</string>
+    <string name="contact_add">Add Contact</string>
+    <string name="contact_more">More options</string>
+    <string name="history_info_des">Call type</string>
+    <string name="options">More options</string>
 </resources>

@@ -9,4 +9,18 @@
     <string name="add_contact">添加联系人</string>
     <string name="contact_name_placeholder">联系人姓名</string>
     <string name="contact_avatar_des">联系人头像</string>
+    <string name="contact_details">联系人姓名</string>
+    <string name="contact_details_number">手机号</string>
+    <string name="contact_details_avatar_des">Avatar</string>
+    <string name="contact_details_info">Details</string>
+    <string name="contact_details_title">最近通话</string>
+    <string name="contact_details_settings_title">设置</string>
+    <string name="message_button_des">发送短信</string>
+    <string name="call_button_des">拨打电话</string>
+    <string name="contact_details_number_des">手机号码</string>
+    <string name="contact_search_des">Search Contact</string>
+    <string name="contact_add">Add Contact</string>
+    <string name="contact_more">More options</string>
+    <string name="history_info_des">Call type</string>
+    <string name="options">More options</string>
 </resources>

@@ -10,6 +10,11 @@ import com.glancebar.contact.persistence.database.AppDatabase
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
+/**
+ * 应用主入口
+ * @author Ethan Gary
+ * @date 2020/12/24
+ */
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         val appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.navigation_favorite,
-                R.id.navigation_history,
+                R.id.navigation_details,
                 R.id.navigation_contacts
             )
         )

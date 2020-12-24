@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/contact_search"
+        android:title="@string/contact_search_des" />
+
+    <item
+        android:id="@+id/contact_add"
+        android:title="@string/contact_add" />
+    <item
+        android:id="@+id/contact_more_options"
+        android:title="@string/contact_more" />
+</menu>

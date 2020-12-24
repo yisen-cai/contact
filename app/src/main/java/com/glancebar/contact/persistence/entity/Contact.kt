@@ -6,11 +6,16 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 
+/**
+ * The Phone call entity
+ * @author Ethan Gary
+ * @date 2020/12/24
+ */
 @Entity(tableName = "t_contact")
 data class Contact(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
-    var id: Int = 0,
+    var id: Long = 0,
 
     @NonNull
     @ColumnInfo(name = "username")

@@ -42,6 +42,9 @@ class ContactRepositoryTest {
         assertThat(result[0], equalTo(contact))
     }
 
+    fun getAll() {
+        val results = contactDao.getAllContacts()
+    }
 
     @After
     fun tearDown() {

@@ -34,5 +34,5 @@ interface ContactDao {
      * all necessary code to update the LiveData when the database is updated
      */
     @Query("select * from t_contact order by username asc")
-    fun getAllWords(): LiveData<List<Contact>>
+    fun getAllContacts(): LiveData<List<Contact>>
 }

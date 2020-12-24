@@ -7,7 +7,11 @@ import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.glancebar.contact.persistence.dao.ContactDao
+import com.glancebar.contact.persistence.dao.HistoryDao
+import com.glancebar.contact.persistence.dao.TagDao
 import com.glancebar.contact.persistence.entity.Contact
+import com.glancebar.contact.persistence.entity.History
+import com.glancebar.contact.persistence.entity.Tag
 
 /**
  * Create database instance here
@@ -15,10 +19,12 @@ import com.glancebar.contact.persistence.entity.Contact
  * @author Ethan Gary
  * @date 2020/12/23
  */
-@Database(entities = [Contact::class], version = 1)
+@Database(entities = [Contact::class, History::class, Tag::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun getContactDao(): ContactDao
+    abstract fun getHistoryDao(): HistoryDao
+    abstract fun getTagDao(): TagDao
 
     companion object {
         @Volatile

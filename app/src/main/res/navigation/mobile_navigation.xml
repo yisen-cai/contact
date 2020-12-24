@@ -15,11 +15,17 @@
         android:id="@+id/navigation_history"
         android:name="com.glancebar.contact.ui.history.HistoryFragment"
         android:label="@string/title_history"
-        tools:layout="@layout/history_fragment" />
+        tools:layout="@layout/details_fragment" />
 
     <fragment
         android:id="@+id/navigation_contacts"
         android:name="com.glancebar.contact.ui.contacts.ContactsFragment"
         android:label="@string/title_contacts"
         tools:layout="@layout/contacts_fragment" />
+
+    <fragment
+        android:id="@+id/navigation_details"
+        android:name="com.glancebar.contact.ui.details.DetailsFragment"
+        android:label="details_fragment"
+        tools:layout="@layout/details_fragment" />
 </navigation>

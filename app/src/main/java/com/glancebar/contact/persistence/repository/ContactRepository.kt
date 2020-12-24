@@ -14,7 +14,7 @@ class ContactRepository(
     private val db: AppDatabase = AppDatabase.INSTANCE!!,
     private val contactDao: ContactDao = db.getContactDao()
 ) {
-    suspend fun insert(contact: Contact) {
+    fun insert(contact: Contact) {
         contactDao.insert(contact)
     }
 }
