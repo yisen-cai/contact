@@ -19,20 +19,29 @@ data class Contact(
 
     @NonNull
     @ColumnInfo(name = "username")
-    var username: String,
+    var username: String? = null,
 
     @NonNull
     @ColumnInfo(name = "number")
-    var number: String,
+    var number: String? = null,
+
+    @ColumnInfo(name = "telephone")
+    var telephone: String? = null,
 
     @ColumnInfo(name = "avatar")
-    var avatar: String?,
+    var avatar: String? = null,
+
+    @ColumnInfo(name = "email")
+    var email: String? = null,
 
     @ColumnInfo(name = "company")
     var company: String? = null,
 
+    @ColumnInfo(name = "location")
+    var location: String? = null,
+
     @ColumnInfo(name = "tags")
-    var tags: String = "",
+    var tags: String? = null,
 
     @ColumnInfo(name = "is_marked")
     var isMarked: Boolean = false

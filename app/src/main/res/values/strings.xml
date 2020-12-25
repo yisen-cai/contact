@@ -22,4 +22,15 @@
     <string name="contact_more">More options</string>
     <string name="history_info_des">Call type</string>
     <string name="options">More options</string>
+    <string name="add_contact_name_tip_string">Name</string>
+    <string name="add_contact_number_tip_string">Mobile</string>
+    <string name="add_contact_telephone_tip">Telephone:</string>
+    <string name="add_contact_company_tip_string">Company:</string>
+    <string name="add_contact_company_placeholder">Input Company</string>
+    <string name="add_contact_email_tip_string">Email:</string>
+    <string name="add_contact_email_placeholder">Input Email</string>
+    <string name="add_contact_location_tip_string">Location:</string>
+    <string name="add_contact_location_placeholder">Input Location</string>
+    <string name="save_button_text">Save</string>
+    <string name="add_contact_telephone_place_holder">Input Telephone number</string>
 </resources>

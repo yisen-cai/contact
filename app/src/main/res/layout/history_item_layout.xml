@@ -4,13 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/history_list_item"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="50dp"
+    android:clickable="true"
+    android:elevation="2dp"
+    android:focusable="true">
 
     <ImageView
         android:id="@+id/history_contact_avatar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="16dp"
+        android:background="@drawable/image_radius"
         android:contentDescription="@string/contact_avatar_des"
+        android:hapticFeedbackEnabled="true"
+        android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -20,7 +27,7 @@
         android:id="@+id/history_contact_username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="4dp"
         android:text="@string/contact_name_placeholder"
         app:layout_constraintStart_toEndOf="@+id/history_contact_avatar"
@@ -30,12 +37,23 @@
         android:id="@+id/history_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginBottom="4dp"
         android:contentDescription="@string/history_info_des"
         app:layout_constraintBottom_toBottomOf="@+id/history_contact_number_info"
         app:layout_constraintStart_toEndOf="@+id/history_contact_avatar"
         app:layout_constraintTop_toTopOf="@+id/history_contact_number_info"
         app:srcCompat="@drawable/ic_phone_call" />
+
+    <TextView
+        android:id="@+id/history_contact_number_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginBottom="4dp"
+        android:text="@string/contact_details_number"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/history_info" />
 
     <ImageView
         android:id="@+id/history_options"
@@ -48,15 +66,4 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_options" />
 
-    <TextView
-        android:id="@+id/history_contact_number_info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="4dp"
-        android:text="@string/contact_details_number"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/history_info"
-        app:layout_constraintTop_toBottomOf="@+id/history_contact_username" />
 </androidx.constraintlayout.widget.ConstraintLayout>

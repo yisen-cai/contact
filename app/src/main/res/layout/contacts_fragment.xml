@@ -5,10 +5,9 @@
     android:layout_height="match_parent"
     tools:context=".ui.contacts.ContactsFragment">
 
-    <TextView
-        android:id="@+id/text_contact"
+    <ListView
+        android:id="@+id/list_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/title_contacts" />
+        android:layout_height="match_parent" />
 
 </FrameLayout>
