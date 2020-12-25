@@ -33,4 +33,5 @@
     <string name="add_contact_location_placeholder">Input Location</string>
     <string name="save_button_text">Save</string>
     <string name="add_contact_telephone_place_holder">Input Telephone number</string>
+    <string name="add_contact_number_placeholder">Input number</string>
 </resources>

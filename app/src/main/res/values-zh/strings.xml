@@ -34,4 +34,5 @@
     <string name="add_contact_location_placeholder">请输入地址</string>
     <string name="save_button_text">保存</string>
     <string name="add_contact_telephone_place_holder">请输入电话号码</string>
+    <string name="add_contact_number_placeholder">请输入手机号</string>
 </resources>
