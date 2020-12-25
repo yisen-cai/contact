@@ -1,51 +1,18 @@
 package com.glancebar.contact.ui.contacts
 
-import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
+import android.content.ContentResolver
 import android.content.Intent
-import android.net.Uri
-import android.os.Build
+import android.database.Cursor
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.util.Log
 import android.view.*
-import android.widget.ListView
-import android.widget.SimpleCursorAdapter
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.glancebar.contact.AddContactActivity
 import com.glancebar.contact.R
 
-
-/*
- * Defines an array that contains column names to move from
- * the Cursor to the ListView.
- */
-@SuppressLint("InlinedApi")
-private val FROM_COLUMNS: Array<String> = arrayOf(
-    if ((Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)) {
-        ContactsContract.Contacts.DISPLAY_NAME_PRIMARY
-    } else {
-        ContactsContract.Contacts.DISPLAY_NAME
-    }
-)
-
-@SuppressLint("InlinedApi")
-private val PROJECTION: Array<out String> = arrayOf(
-    ContactsContract.Contacts._ID,
-    ContactsContract.Contacts.LOOKUP_KEY,
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
-        ContactsContract.Contacts.DISPLAY_NAME_PRIMARY
-    else
-        ContactsContract.Contacts.DISPLAY_NAME
-)
-
-/*
- * Defines an array that contains resource ids for the layout views
- * that get the Cursor column contents. The id is pre-defined in
- * the Android framework, so it is prefaced with "android.R.id"
- */
-private val TO_IDS: IntArray = intArrayOf(android.R.id.text1)
 
 class ContactsFragment : Fragment() {
 
@@ -55,42 +22,10 @@ class ContactsFragment : Fragment() {
 
     private lateinit var viewModel: ContactsViewModel
 
-    // Define global mutable variables
-    // Define a ListView object
-    lateinit var contactsList: ListView
-
-    // Define variables for the contact the user selects
-    // The contact's _ID value
-    var contactId: Long = 0
-
-    // The contact's LOOKUP_KEY
-    var contactKey: String? = null
-
-    // A content URI for the selected contact
-    var contactUri: Uri? = null
-
-    // An adapter that binds the result Cursor to the ListView
-    private var cursorAdapter: SimpleCursorAdapter? = null
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-
-        // Gets the ListView from the View list of the parent activity
-        activity?.also {
-            contactsList = it.findViewById(R.id.list_view)
-            // Gets a CursorAdapter
-            cursorAdapter = SimpleCursorAdapter(
-                it,
-                R.layout.contact_list_item,
-                null,
-                FROM_COLUMNS, TO_IDS,
-                0
-            )
-            // Sets the adapter for the ListView
-            contactsList.adapter = cursorAdapter
-        }
     }
 
     override fun onCreateView(
@@ -118,6 +53,7 @@ class ContactsFragment : Fragment() {
 
             R.id.contact_search -> {
                 Log.i("OptionItem", "onOptionsItemSelected: searchContact")
+                getContactList()
                 true
             }
 
@@ -144,6 +80,62 @@ class ContactsFragment : Fragment() {
                 // TODO: added Contact
             }
         }
+    }
+
+
+    private fun getContactList() {
+        val cr: ContentResolver = context!!.contentResolver
+        val cur: Cursor? = cr.query(
+            ContactsContract.Contacts.CONTENT_URI,
+            null, null, null, null
+        )
+        if ((cur?.count ?: 0) > 0) {
+            while (cur != null && cur.moveToNext()) {
+                val id: String = cur.getString(
+                    cur.getColumnIndex(ContactsContract.Contacts._ID)
+                )
+                val avatar: String? = cur.getString(
+                    cur.getColumnIndex(ContactsContract.Contacts.PHOTO_URI)
+                )
+                val name: String = cur.getString(
+                    cur.getColumnIndex(
+                        ContactsContract.Contacts.DISPLAY_NAME
+                    )
+                )
+                if (cur.getInt(
+                        cur.getColumnIndex(
+                            ContactsContract.Contacts.HAS_PHONE_NUMBER
+                        )
+                    ) > 0
+                ) {
+                    val pCur: Cursor? = cr.query(
+                        ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                        null,
+                        ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
+                        arrayOf(id),
+                        null
+                    )
+                    if (pCur != null) {
+                        while (pCur.moveToNext()) {
+                            val phoneNo: String = pCur.getString(
+                                pCur.getColumnIndex(
+                                    ContactsContract.CommonDataKinds.Phone.NUMBER
+                                )
+                            )
+                            Log.i("TAG", "Name: $name")
+                            Log.i("TAG", "Phone Number: $phoneNo")
+                            Log.i("TAG", "Phone URI: $avatar")
+                        }
+                    }
+                    pCur?.close()
+                }
+            }
+        }
+        cur?.close()
+    }
+
+    fun getCallHistory() {
+
     }
 }
 
