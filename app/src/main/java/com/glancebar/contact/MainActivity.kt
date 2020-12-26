@@ -1,5 +1,6 @@
 package com.glancebar.contact
 
+import android.content.Context
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -19,6 +20,10 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
  * @date 2020/12/24
  */
 class MainActivity : AppCompatActivity() {
+
+    override fun attachBaseContext(newBase: Context?) {
+        super.attachBaseContext(newBase)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

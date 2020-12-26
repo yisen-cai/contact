@@ -34,4 +34,6 @@
     <string name="save_button_text">Save</string>
     <string name="add_contact_telephone_place_holder">Input Telephone number</string>
     <string name="add_contact_number_placeholder">Input number</string>
+    <string name="save_contact">Save</string>
+    <string name="add_contact_success">Add Contact Success</string>
 </resources>

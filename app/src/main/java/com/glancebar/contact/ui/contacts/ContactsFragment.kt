@@ -8,10 +8,17 @@ import android.os.Bundle
 import android.provider.ContactsContract
 import android.util.Log
 import android.view.*
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.glancebar.contact.AddContactActivity
 import com.glancebar.contact.R
+import com.glancebar.contact.persistence.database.AppDatabase
+import com.glancebar.contact.persistence.entity.Contact
 
 
 class ContactsFragment : Fragment() {
@@ -21,7 +28,8 @@ class ContactsFragment : Fragment() {
     }
 
     private lateinit var viewModel: ContactsViewModel
-
+    private val contactDao = AppDatabase.INSTANCE!!.getContactDao()
+    private lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +40,16 @@ class ContactsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.contacts_fragment, container, false)
+        val root = inflater.inflate(R.layout.contacts_fragment, container, false)
+        initRecyclerView(root)
+        // TODO: move to data initialized
+        setUpAdapter()
+        return root
+    }
+
+    private fun initRecyclerView(root: View) {
+        recyclerView = root.findViewById(R.id.contact_recycler)
+        recyclerView.layoutManager = LinearLayoutManager(context)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -82,9 +99,16 @@ class ContactsFragment : Fragment() {
         }
     }
 
+    private fun setUpAdapter() {
+        val values: MutableList<Contact> = mutableListOf()
+        for (i in 1..100) {
+            values.add(Contact(username = "something"))
+        }
+        recyclerView.adapter = ContactsAdapter(values)
+    }
 
     private fun getContactList() {
-        val cr: ContentResolver = context!!.contentResolver
+        val cr: ContentResolver = requireContext().contentResolver
         val cur: Cursor? = cr.query(
             ContactsContract.Contacts.CONTENT_URI,
             null, null, null, null
@@ -145,4 +169,42 @@ enum class ActivityResult
 ) {
     ADD_CONTACT(0),
     SEARCH_CONTACT(1);
+}
+
+
+class ContactsAdapter(
+    private val contacts: MutableList<Contact>
+) : RecyclerView.Adapter<ContactsAdapter.ViewHolder>() {
+
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        private val contactItem: ConstraintLayout = view.findViewById(R.id.contact_card)
+        private val nameTextView: TextView = view.findViewById(R.id.contact_card_username)
+        private val avatarImageView: ImageView = view.findViewById(R.id.contact_card_avatar)
+
+        init {
+            contactItem.setOnClickListener {
+                // TODO: clicked
+            }
+        }
+
+        fun setData(contact: Contact) {
+            nameTextView.text = contact.username
+            // TODO: set image
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.contact_list_item, parent, false)
+        return ViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val contact = contacts[position]
+        holder.setData(contact)
+    }
+
+    override fun getItemCount(): Int {
+        return contacts.size
+    }
 }

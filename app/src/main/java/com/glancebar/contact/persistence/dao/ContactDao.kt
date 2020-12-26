@@ -1,17 +1,21 @@
 package com.glancebar.contact.persistence.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import com.glancebar.contact.persistence.entity.Contact
+import io.reactivex.Completable
+import kotlinx.coroutines.flow.Flow
 
+/**
+ * https://developer.android.com/training/data-storage/room/async-queries
+ */
 @Dao
 interface ContactDao {
 
     @Insert
-    fun insert(contact: Contact)
+    fun insert(contact: Contact): Completable
 
     @Insert
     fun insertAll(vararg contact: Contact)
@@ -34,5 +38,5 @@ interface ContactDao {
      * all necessary code to update the LiveData when the database is updated
      */
     @Query("select * from t_contact order by username asc")
-    fun getAllContacts(): LiveData<List<Contact>>
+    fun getAllContacts(): Flow<List<Contact>>
 }

@@ -5,11 +5,11 @@
 
     <data>
 
-        <import type="android.view.View" />
+        <import type="com.glancebar.contact.persistence.entity.Contact" />
 
         <variable
             name="contact"
-            type="com.glancebar.contact.persistence.entity.Contact" />
+            type="Contact" />
     </data>
 
     <ScrollView
@@ -30,7 +30,7 @@
                 android:layout_marginTop="24dp"
                 android:background="@drawable/image_radius"
                 android:contentDescription="@string/contact_avatar_des"
-                android:src="@{contact.avatar, default=@drawable/avatar}"
+                android:src="@drawable/avatar"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -43,9 +43,9 @@
                 android:autofillHints="@string/contact_details_number"
                 android:ems="8"
                 android:hint="@string/add_contact_number_placeholder"
-                android:inputType="phone"
+                android:inputType="numberSigned|numberDecimal"
+                android:text="@={contact.number, default=@string/contact_details_number}"
                 android:theme="@style/EditTextTheme"
-                android:text="@{contact.number, default=@string/contact_details_number}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.65"
                 app:layout_constraintStart_toStartOf="parent"
@@ -75,8 +75,8 @@
                 android:ems="8"
                 android:hint="@string/add_contact_telephone_place_holder"
                 android:inputType="phone"
+                android:text="@={contact.telephone, default=@string/add_contact_telephone_place_holder}"
                 android:theme="@style/EditTextTheme"
-                android:text="@{contact.telephone, default=@string/add_contact_telephone_place_holder}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.65"
                 app:layout_constraintStart_toStartOf="parent"
@@ -117,9 +117,9 @@
                 android:ems="8"
                 android:hint="@string/add_contact_email_placeholder"
                 android:importantForAutofill="no"
-                android:theme="@style/EditTextTheme"
                 android:inputType="textEmailAddress"
-                android:text="@{contact.email, default=@string/add_contact_email_placeholder}"
+                android:text="@={contact.telephone, default=@string/add_contact_email_placeholder}"
+                android:theme="@style/EditTextTheme"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.65"
                 app:layout_constraintStart_toStartOf="parent"
@@ -135,8 +135,8 @@
                 android:hint="@string/add_contact_company_placeholder"
                 android:importantForAutofill="no"
                 android:inputType="text"
+                android:text="@={contact.company, default=@string/add_contact_company_placeholder}"
                 android:theme="@style/EditTextTheme"
-                android:text="@{contact.company, default=@string/add_contact_company_placeholder}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.65"
                 app:layout_constraintStart_toStartOf="parent"
@@ -177,8 +177,8 @@
                 android:hint="@string/add_contact_location_placeholder"
                 android:importantForAutofill="no"
                 android:inputType="text"
+                android:text="@={contact.location, default=@string/add_contact_location_placeholder}"
                 android:theme="@style/EditTextTheme"
-                android:text="@{contact.location, default=@string/add_contact_location_placeholder}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.65"
                 app:layout_constraintStart_toStartOf="parent"
@@ -195,8 +195,8 @@
                 android:ems="8"
                 android:hint="@string/contact_name_placeholder"
                 android:inputType="textPersonName"
+                android:text="@={contact.username,default=@string/contact_name_placeholder}"
                 android:theme="@style/EditTextTheme"
-                android:text="@{contact.username,default=@string/contact_name_placeholder}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.65"
                 app:layout_constraintStart_toStartOf="parent"
