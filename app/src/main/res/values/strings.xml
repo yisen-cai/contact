@@ -37,4 +37,6 @@
     <string name="save_contact">Save</string>
     <string name="add_contact_success">Add Contact Success</string>
     <string name="back_action_title">Back</string>
+    <string name="today_history_label">Today</string>
+    <string name="more_history_label">More</string>
 </resources>

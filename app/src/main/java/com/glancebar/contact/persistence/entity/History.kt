@@ -24,12 +24,12 @@ data class History(
  * One to Many relation
  * https://developer.android.com/training/data-storage/room/relationships
  */
-data class UserWithHistory(
+data class ContactWithHistory(
     @Embedded
     val contact: Contact,
     @Relation(
         parentColumn = "id",
         entityColumn = "contactId"
     )
-    val history: List<History>
+    val histories: List<History>
 )

@@ -2,6 +2,7 @@ package com.glancebar.contact
 
 import android.content.Context
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -22,6 +23,12 @@ class MainActivity : AppCompatActivity() {
         super.attachBaseContext(newBase)
     }
 
+    private lateinit var navView: BottomNavigationView
+
+    companion object {
+        const val DURATION: Long = 200
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -29,7 +36,8 @@ class MainActivity : AppCompatActivity() {
         AppDatabase.initDatabase(this)
 
         setContentView(R.layout.activity_main)
-        val navView: BottomNavigationView = findViewById(R.id.nav_view)
+
+        navView = findViewById(R.id.nav_view)
 
         val navController = findNavController(R.id.nav_host_fragment)
         // Passing each menu ID as a set of Ids because each
@@ -43,6 +51,26 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+    }
+
+    fun hideNavigator() {
+        with(navView) {
+            if (visibility == View.VISIBLE && alpha == 1f) {
+                animate()
+                    .alpha(0f)
+                    .withEndAction { visibility = View.GONE }
+                    .duration = DURATION
+            }
+        }
+    }
+
+    fun showNavigator() {
+        with(navView) {
+            visibility = View.VISIBLE
+            animate()
+                .alpha(1f)
+                .duration = DURATION
+        }
     }
 
 //    override fun onCreateOptionsMenu(menu: Menu?): Boolean {

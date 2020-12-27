@@ -16,6 +16,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.glancebar.contact.AddContactActivity
@@ -203,11 +204,6 @@ class ContactsAdapter(
         private val nameTextView: TextView = view.findViewById(R.id.contact_card_username)
         private val avatarImageView: ImageView = view.findViewById(R.id.contact_card_avatar)
 
-        init {
-            contactItem.setOnClickListener {
-                // TODO: clicked
-            }
-        }
 
         fun setData(contact: Contact) {
             nameTextView.text = contact.username
@@ -228,6 +224,20 @@ class ContactsAdapter(
             contactItem.startAnimation(anim)
 
             // TODO: set image
+
+
+            setUpListener(contact)
+        }
+
+
+        fun setUpListener(contact: Contact) {
+            contactItem.setOnClickListener {
+                val actions =
+                    ContactsFragmentDirections.actionNavigationContactsToNavigationDetails(
+                        contactNumber = contact.number!!
+                    )
+                it.findNavController().navigate(actions)
+            }
         }
     }
 

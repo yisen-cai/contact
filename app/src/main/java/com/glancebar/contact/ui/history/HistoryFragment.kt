@@ -25,10 +25,10 @@ class HistoryFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(HistoryViewModel::class.java)
 
         val root = inflater.inflate(R.layout.history_fragment, container, false)
-        val textView: TextView = root.findViewById(R.id.text_history)
-        viewModel.text.observe(viewLifecycleOwner, {
-            textView.text = it
-        })
+//        val textView: TextView = root.findViewById(R.id.text)
+//        viewModel.text.observe(viewLifecycleOwner, {
+//            textView.text = it
+//        })
         return root
     }
 

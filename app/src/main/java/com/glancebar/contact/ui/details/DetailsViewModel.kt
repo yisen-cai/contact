@@ -7,7 +7,9 @@ import com.glancebar.contact.persistence.entity.Contact
 import com.glancebar.contact.persistence.entity.History
 
 class DetailsViewModel : ViewModel() {
-    var contact: LiveData<Contact>? = null
+    var contact: LiveData<Contact> = MutableLiveData<Contact>().apply {
+        value = Contact()
+    }
     var histories: LiveData<MutableList<History>> =
         MutableLiveData<MutableList<History>>().apply {
             value = mutableListOf()

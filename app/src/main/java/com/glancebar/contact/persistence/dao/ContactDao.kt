@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import com.glancebar.contact.persistence.entity.Contact
+import com.glancebar.contact.persistence.entity.ContactWithHistory
 import io.reactivex.Completable
 import kotlinx.coroutines.flow.Flow
 
@@ -39,4 +40,7 @@ interface ContactDao {
      */
     @Query("select * from t_contact order by username asc")
     fun getAllContacts(): Flow<List<Contact>>
+
+    @Query("select * from t_contact where number=:contactNumber order by username")
+    fun getAllContactsAndHistory(contactNumber: String): Flow<ContactWithHistory?>
 }
