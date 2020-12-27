@@ -44,7 +44,17 @@
         tools:layout="@layout/details_fragment">
         <argument
             android:name="contactNumber"
-            app:argType="string" />
+            app:argType="string"
+            android:defaultValue="1" />
+        <action
+            android:id="@+id/detail_back_to_history"
+            app:destination="@id/navigation_history" />
+        <action
+            android:id="@+id/detail_back_to_contact"
+            app:destination="@id/navigation_contacts" />
+        <action
+            android:id="@+id/detail_back_to_favorite"
+            app:destination="@id/navigation_favorite" />
     </fragment>
 
 </navigation>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_marginTop="2dp"
     android:background="@drawable/contact_list_item_back"
     app:cardElevation="0dp">
@@ -22,22 +22,32 @@
             android:textColor="@color/black"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/contact_card_avatar"
+            app:layout_constraintStart_toEndOf="@+id/contact_list_item_avatar_card"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/contact_card_avatar"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/contact_list_item_avatar_card"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:background="@drawable/image_radius"
-            android:contentDescription="@string/contact_avatar_des"
-            tools:srcCompat="@tools:sample/avatars"
+            android:elevation="0dp"
+            android:outlineAmbientShadowColor="@color/white"
+            android:outlineSpotShadowColor="@color/white"
+            app:cardCornerRadius="30dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/contact_card_avatar"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:contentDescription="@string/contact_avatar_des"
+                android:scaleType="centerCrop"
+                tools:srcCompat="@tools:sample/avatars" />
+        </androidx.cardview.widget.CardView>
 
         <ImageButton
             android:id="@+id/contact_item_call"
@@ -47,8 +57,8 @@
             android:background="@drawable/button_radius"
             android:contentDescription="@string/call_button_des"
             android:elevation="1dp"
-            android:outlineSpotShadowColor="@color/grey"
             android:outlineAmbientShadowColor="@color/grey"
+            android:outlineSpotShadowColor="@color/grey"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/contact_item_message"
             app:layout_constraintTop_toTopOf="parent"
@@ -62,8 +72,8 @@
             android:background="@drawable/button_radius"
             android:contentDescription="@string/message_button_des"
             android:elevation="1dp"
-            android:outlineSpotShadowColor="@color/grey"
             android:outlineAmbientShadowColor="@color/grey"
+            android:outlineSpotShadowColor="@color/grey"
             android:scaleType="centerInside"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

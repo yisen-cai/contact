@@ -4,9 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.glancebar.contact.R
 
 class HistoryFragment : Fragment() {
@@ -29,7 +29,12 @@ class HistoryFragment : Fragment() {
 //        viewModel.text.observe(viewLifecycleOwner, {
 //            textView.text = it
 //        })
+
         return root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        findNavController().navigate(R.id.action_navigation_history_to_navigation_details)
+    }
 }

@@ -19,7 +19,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.glancebar.contact.AddContactActivity
+import com.glancebar.contact.MainActivity
 import com.glancebar.contact.R
 import com.glancebar.contact.persistence.database.AppDatabase
 import com.glancebar.contact.persistence.entity.Contact
@@ -50,12 +52,13 @@ class ContactsFragment : Fragment() {
     ): View? {
         val root = inflater.inflate(R.layout.contacts_fragment, container, false)
         viewModel = ViewModelProvider(this).get(ContactsViewModel::class.java)
-
+        (requireActivity() as MainActivity).showNavigator()
         initRecyclerView(root)
         setUpAdapter()
 
         return root
     }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -199,13 +202,14 @@ class ContactsAdapter(
     /**
      * View Item holder, a recycler item
      */
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         private val contactItem: ConstraintLayout = view.findViewById(R.id.contact_card)
         private val nameTextView: TextView = view.findViewById(R.id.contact_card_username)
         private val avatarImageView: ImageView = view.findViewById(R.id.contact_card_avatar)
 
 
         fun setData(contact: Contact) {
+            setUpListener(contact)
             nameTextView.text = contact.username
 
             // animation
@@ -223,14 +227,11 @@ class ContactsAdapter(
             anim.duration = 300
             contactItem.startAnimation(anim)
 
-            // TODO: set image
-
-
-            setUpListener(contact)
+            Glide.with(view).load(contact.avatar).into(avatarImageView)
         }
 
 
-        fun setUpListener(contact: Contact) {
+        private fun setUpListener(contact: Contact) {
             contactItem.setOnClickListener {
                 val actions =
                     ContactsFragmentDirections.actionNavigationContactsToNavigationDetails(

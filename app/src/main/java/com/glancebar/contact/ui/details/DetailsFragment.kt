@@ -3,16 +3,17 @@ package com.glancebar.contact.ui.details
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.INVISIBLE
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,10 +25,8 @@ import com.glancebar.contact.persistence.dao.ContactDao
 import com.glancebar.contact.persistence.database.AppDatabase
 import com.glancebar.contact.persistence.entity.Contact
 import com.glancebar.contact.persistence.entity.History
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import java.util.*
 
 class DetailsFragment : Fragment() {
 
@@ -40,9 +39,18 @@ class DetailsFragment : Fragment() {
     private lateinit var historyRecyclerView: RecyclerView
     private var contactDao: ContactDao = AppDatabase.INSTANCE!!.getContactDao()
     private lateinit var binding: DetailsFragmentBinding
+    private lateinit var returnCallback: OnBackPressedCallback
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         loadContactAndHistory(args.contactNumber)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // This callback will only be called when MyFragment is at least Started.
+        returnCallback = requireActivity().onBackPressedDispatcher.addCallback(this) {
+            findNavController().navigate(R.id.detail_back_to_contact)
+        }
     }
 
     override fun onCreateView(

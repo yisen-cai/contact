@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-<!--    <item-->
-<!--        android:id="@+id/back_to_contact"-->
-<!--        android:icon="@drawable/ic_back"-->
-<!--        android:title="@string/back_action_title" />-->
     <item
         android:id="@+id/save_contact_check"
         android:icon="@drawable/ic_baseline_check_24"
         android:title="@string/save_contact"
         android:tooltipText="@string/save_contact"
         app:showAsAction="ifRoom" />
-
 </menu>

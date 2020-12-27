@@ -28,10 +28,10 @@
                 android:layout_height="120dp"
                 android:layout_marginTop="30dp"
                 android:contentDescription="@string/contact_details_avatar_des"
-                tools:srcCompat="@tools:sample/avatars"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                tools:srcCompat="@tools:sample/avatars" />
 
             <TextView
                 android:id="@+id/contact_details_username"
@@ -60,8 +60,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
-                    android:contentDescription="@string/contact_details_number_des"
                     android:background="@color/white"
+                    android:contentDescription="@string/contact_details_number_des"
                     android:src="@drawable/ic_phone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

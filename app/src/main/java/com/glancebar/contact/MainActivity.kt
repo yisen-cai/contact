@@ -66,13 +66,14 @@ class MainActivity : AppCompatActivity() {
 
     fun showNavigator() {
         with(navView) {
-            visibility = View.VISIBLE
-            animate()
-                .alpha(1f)
-                .duration = DURATION
+            if (visibility == View.INVISIBLE) {
+                visibility = View.VISIBLE
+                animate()
+                    .alpha(1f)
+                    .duration = DURATION
+            }
         }
     }
-
 //    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
 //        val inflater: MenuInflater = menuInflater
 //        inflater.inflate(R.menu.contacts_menu, menu)
