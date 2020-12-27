@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import com.glancebar.contact.persistence.entity.History
+import io.reactivex.Completable
 
 
 /**
@@ -15,11 +16,11 @@ import com.glancebar.contact.persistence.entity.History
 interface HistoryDao {
 
     @Insert
-    fun insert(history: History);
+    fun insert(history: History): Completable
 
     @Insert
-    fun insertAll(vararg history: History)
+    fun insertAll(vararg history: History): Completable
 
     @Delete
-    fun delete(history: History)
+    fun delete(history: History): Completable
 }

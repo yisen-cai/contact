@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.text.Html
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -39,7 +38,7 @@ class AddContactActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.save_contact_check -> {
-                // TODO: save contact
+                saveContact()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -51,13 +50,15 @@ class AddContactActivity : AppCompatActivity() {
         return super.onCreateOptionsMenu(menu)
     }
 
-    fun saveContact(view: View) {
+    private fun saveContact() {
+        // TODO: contact validation
         contactDao.insert(contact)
         val data = Intent()
         data.putExtra("msg", getString(R.string.add_contact_success))
         setResult(RESULT_OK, data)
         finish()
     }
+
 
     private fun setLabelText() {
         val nameTipTextView: TextView = findViewById(R.id.add_contact_name_tip)

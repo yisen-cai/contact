@@ -36,4 +36,5 @@
     <string name="add_contact_number_placeholder">Input number</string>
     <string name="save_contact">Save</string>
     <string name="add_contact_success">Add Contact Success</string>
+    <string name="back_action_title">Back</string>
 </resources>

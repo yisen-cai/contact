@@ -31,18 +31,18 @@ abstract class AppDatabase : RoomDatabase() {
         var INSTANCE: AppDatabase? = null
 
         // Migration path definition from version 3 to version 4.
-        val MIGRATION_3_4 = object : Migration(1, 2) {
-            override fun migrate(database: SupportSQLiteDatabase) {
-
-            }
-        }
+//        val MIGRATION_3_4 = object : Migration(1, 2) {
+//            override fun migrate(database: SupportSQLiteDatabase) {
+//
+//            }
+//        }
 
         fun initDatabase(context: Context) {
             // create database here
             INSTANCE = Room.databaseBuilder(
                 context.applicationContext,
                 AppDatabase::class.java,
-                "sample.db"
+                "sample-db"
             ).fallbackToDestructiveMigration()
 //                        .addMigrations(MIGRATION_3_4)
                 .build()

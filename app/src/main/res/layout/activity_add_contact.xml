@@ -216,35 +216,35 @@
                 app:layout_constraintEnd_toStartOf="@+id/add_contact_name"
                 app:layout_constraintTop_toBottomOf="@+id/add_contact_avatar" />
 
-            <ImageButton
-                android:id="@+id/add_contact_save_button"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_marginTop="32dp"
-                android:layout_marginBottom="4dp"
-                android:background="@drawable/save_button"
-                android:contentDescription="@string/call_button_des"
-                android:onClick="saveContact"
-                android:scaleType="center"
-                android:src="@drawable/ic_save"
-                app:layout_constraintBottom_toTopOf="@+id/add_contact_save"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/add_contact_location" />
+<!--            <ImageButton-->
+<!--                android:id="@+id/add_contact_save_button"-->
+<!--                android:layout_width="60dp"-->
+<!--                android:layout_height="60dp"-->
+<!--                android:layout_marginTop="32dp"-->
+<!--                android:layout_marginBottom="4dp"-->
+<!--                android:background="@drawable/save_button"-->
+<!--                android:contentDescription="@string/call_button_des"-->
+<!--                android:onClick="saveContact"-->
+<!--                android:scaleType="center"-->
+<!--                android:src="@drawable/ic_save"-->
+<!--                app:layout_constraintBottom_toTopOf="@+id/add_contact_save"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/add_contact_location" />-->
 
-            <TextView
-                android:id="@+id/add_contact_save"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="32dp"
-                android:text="@string/save_button_text"
-                android:textColor="@color/black"
-                android:textSize="15sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/add_contact_save_button" />
+<!--            <TextView-->
+<!--                android:id="@+id/add_contact_save"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="4dp"-->
+<!--                android:layout_marginBottom="32dp"-->
+<!--                android:text="@string/save_button_text"-->
+<!--                android:textColor="@color/black"-->
+<!--                android:textSize="15sp"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/add_contact_save_button" />-->
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

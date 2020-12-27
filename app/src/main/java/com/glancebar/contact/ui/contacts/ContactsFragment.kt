@@ -8,17 +8,23 @@ import android.os.Bundle
 import android.provider.ContactsContract
 import android.util.Log
 import android.view.*
+import android.view.animation.Animation
+import android.view.animation.ScaleAnimation
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.glancebar.contact.AddContactActivity
 import com.glancebar.contact.R
 import com.glancebar.contact.persistence.database.AppDatabase
 import com.glancebar.contact.persistence.entity.Contact
+import com.glancebar.contact.persistence.repository.ContactRepository
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 
 class ContactsFragment : Fragment() {
@@ -29,6 +35,7 @@ class ContactsFragment : Fragment() {
 
     private lateinit var viewModel: ContactsViewModel
     private val contactDao = AppDatabase.INSTANCE!!.getContactDao()
+    private val contactRepository = ContactRepository()
     private lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,10 +48,30 @@ class ContactsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val root = inflater.inflate(R.layout.contacts_fragment, container, false)
+        viewModel = ViewModelProvider(this).get(ContactsViewModel::class.java)
+
         initRecyclerView(root)
-        // TODO: move to data initialized
         setUpAdapter()
+
         return root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        loadContactsFromDatabase()
+    }
+
+    private fun loadContactsFromDatabase() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            contactDao.getAllContacts().collect {
+                it.forEach { contact ->
+                    viewModel.contacts.value!!.add(contact)
+                    Log.i("TAG", "loadContactsFromDatabase: $it")
+                }
+                // notify UI update
+                recyclerView.adapter!!.notifyDataSetChanged()
+            }
+        }
     }
 
     private fun initRecyclerView(root: View) {
@@ -52,14 +79,7 @@ class ContactsFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(context)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(ContactsViewModel::class.java)
-        // TODO: Use the ViewModel
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
         return when (item.itemId) {
             R.id.contact_add -> {
                 Log.i("OptionItem", "onOptionsItemSelected: addContact")
@@ -100,11 +120,7 @@ class ContactsFragment : Fragment() {
     }
 
     private fun setUpAdapter() {
-        val values: MutableList<Contact> = mutableListOf()
-        for (i in 1..100) {
-            values.add(Contact(username = "something"))
-        }
-        recyclerView.adapter = ContactsAdapter(values)
+        recyclerView.adapter = ContactsAdapter(viewModel.contacts.value!!)
     }
 
     private fun getContactList() {
@@ -172,10 +188,16 @@ enum class ActivityResult
 }
 
 
+/**
+ * Recycler Adapter, set recycler data and tab actions
+ */
 class ContactsAdapter(
     private val contacts: MutableList<Contact>
 ) : RecyclerView.Adapter<ContactsAdapter.ViewHolder>() {
 
+    /**
+     * View Item holder, a recycler item
+     */
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val contactItem: ConstraintLayout = view.findViewById(R.id.contact_card)
         private val nameTextView: TextView = view.findViewById(R.id.contact_card_username)
@@ -189,6 +211,22 @@ class ContactsAdapter(
 
         fun setData(contact: Contact) {
             nameTextView.text = contact.username
+
+            // animation
+            val anim = ScaleAnimation(
+                0.95f,
+                1.0f,
+                0.95f,
+                1.0f,
+                Animation.RELATIVE_TO_SELF,
+                0.5f,
+                Animation.RELATIVE_TO_SELF,
+                0.5f
+            )
+
+            anim.duration = 300
+            contactItem.startAnimation(anim)
+
             // TODO: set image
         }
     }

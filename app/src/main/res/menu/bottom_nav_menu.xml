@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/navigation_favorite"
         android:icon="@drawable/ic_favorite"
         android:title="@string/title_favorite" />
 
-    <!-- the id must keep same with navigation fragment id-->
-<!--    <item-->
-<!--        android:id="@+id/navigation_history"-->
-<!--        android:icon="@drawable/ic_history"-->
-<!--        android:title="@string/title_history" />-->
+    <!--     the id must keep same with navigation fragment id-->
     <item
-        android:id="@+id/navigation_details"
+        android:id="@+id/navigation_history"
         android:icon="@drawable/ic_history"
         android:title="@string/title_history" />
+
+<!--    <item-->
+<!--        android:id="@+id/navigation_details"-->
+<!--        android:icon="@drawable/ic_history"-->
+<!--        android:title="@string/title_history" />-->
 
     <item
         android:id="@+id/navigation_contacts"

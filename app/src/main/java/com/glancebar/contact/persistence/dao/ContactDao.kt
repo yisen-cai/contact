@@ -15,10 +15,10 @@ import kotlinx.coroutines.flow.Flow
 interface ContactDao {
 
     @Insert
-    fun insert(contact: Contact): Completable
+    fun insert(contact: Contact)
 
     @Insert
-    fun insertAll(vararg contact: Contact)
+    fun insertAll(vararg contact: Contact): Completable
 
     @Query("select * from t_contact where username like :username order by username")
     fun findByName(username: String): List<Contact>
@@ -27,7 +27,7 @@ interface ContactDao {
     fun deleteAll()
 
     @Delete
-    fun delete(contact: Contact)
+    fun delete(contact: Contact): Completable
 
 //    @Query("select * from word_table order by word asc")
 //    fun getAllWords(): List<Word>
