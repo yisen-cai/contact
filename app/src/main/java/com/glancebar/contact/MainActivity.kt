@@ -1,6 +1,5 @@
 package com.glancebar.contact
 
-import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -19,14 +18,10 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
  */
 class MainActivity : AppCompatActivity() {
 
-    override fun attachBaseContext(newBase: Context?) {
-        super.attachBaseContext(newBase)
-    }
-
     private lateinit var navView: BottomNavigationView
 
     companion object {
-        const val DURATION: Long = 200
+        const val DURATION: Long = 10
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,16 +59,21 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     *
+     */
     fun showNavigator() {
         with(navView) {
-            if (visibility == View.INVISIBLE) {
+            if (visibility == View.GONE) {
                 visibility = View.VISIBLE
                 animate()
                     .alpha(1f)
-                    .duration = DURATION
+                    .duration = 1
             }
         }
     }
+
+
 //    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
 //        val inflater: MenuInflater = menuInflater
 //        inflater.inflate(R.menu.contacts_menu, menu)

@@ -4,12 +4,14 @@ import android.app.Activity.RESULT_OK
 import android.content.ContentResolver
 import android.content.Intent
 import android.database.Cursor
+import android.net.Uri
 import android.os.Bundle
 import android.provider.ContactsContract
 import android.util.Log
 import android.view.*
 import android.view.animation.Animation
 import android.view.animation.ScaleAnimation
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -17,6 +19,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -26,6 +29,8 @@ import com.glancebar.contact.R
 import com.glancebar.contact.persistence.database.AppDatabase
 import com.glancebar.contact.persistence.entity.Contact
 import com.glancebar.contact.persistence.repository.ContactRepository
+import com.glancebar.contact.utils.Consts
+import com.glancebar.contact.utils.OnRecyclerReachBottomListener
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -41,6 +46,7 @@ class ContactsFragment : Fragment() {
     private val contactRepository = ContactRepository()
     private lateinit var recyclerView: RecyclerView
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -50,12 +56,10 @@ class ContactsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        (requireActivity() as MainActivity).showNavigator()
         val root = inflater.inflate(R.layout.contacts_fragment, container, false)
         viewModel = ViewModelProvider(this).get(ContactsViewModel::class.java)
-        (requireActivity() as MainActivity).showNavigator()
         initRecyclerView(root)
-        setUpAdapter()
-
         return root
     }
 
@@ -67,7 +71,10 @@ class ContactsFragment : Fragment() {
 
     private fun loadContactsFromDatabase() {
         viewLifecycleOwner.lifecycleScope.launch {
-            contactDao.getAllContacts().collect {
+            contactDao.getContacts(
+                offset = viewModel.contactPage.value!!.offset,
+                viewModel.contactPage.value!!.size
+            ).collect {
                 it.forEach { contact ->
                     viewModel.contacts.value!!.add(contact)
                     Log.i("TAG", "loadContactsFromDatabase: $it")
@@ -76,11 +83,27 @@ class ContactsFragment : Fragment() {
                 recyclerView.adapter!!.notifyDataSetChanged()
             }
         }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            contactDao.getCount().collect {
+                viewModel.contactPage.value!!.total = it
+            }
+        }
     }
 
     private fun initRecyclerView(root: View) {
         recyclerView = root.findViewById(R.id.contact_recycler)
         recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.adapter =
+            ContactsAdapter(viewModel.contacts.value!!,
+                object : OnRecyclerReachBottomListener {
+                    override fun onBottomReached(position: Int) {
+                        if (viewModel.contactPage.value!!.total > viewModel.contactPage.value!!.offset) {
+                            viewModel.contactPage.value!!.offset = position + 1
+                            loadContactsFromDatabase()
+                        }
+                    }
+                })
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -94,12 +117,12 @@ class ContactsFragment : Fragment() {
 
             R.id.contact_search -> {
                 Log.i("OptionItem", "onOptionsItemSelected: searchContact")
-                getContactList()
                 true
             }
 
             R.id.settings1 -> {
                 Log.i("OptionItem", "onOptionsItemSelected: moreOptions")
+                findNavController().navigate(R.id.contact_navigate_to_search)
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -121,10 +144,6 @@ class ContactsFragment : Fragment() {
                 // TODO: added Contact
             }
         }
-    }
-
-    private fun setUpAdapter() {
-        recyclerView.adapter = ContactsAdapter(viewModel.contacts.value!!)
     }
 
     private fun getContactList() {
@@ -179,7 +198,6 @@ class ContactsFragment : Fragment() {
     }
 
     fun getCallHistory() {
-
     }
 }
 
@@ -191,13 +209,14 @@ enum class ActivityResult
     SEARCH_CONTACT(1);
 }
 
-
 /**
  * Recycler Adapter, set recycler data and tab actions
  */
 class ContactsAdapter(
-    private val contacts: MutableList<Contact>
+    private val contacts: MutableList<Contact>,
+    private val onRecyclerReachBottomListener: OnRecyclerReachBottomListener
 ) : RecyclerView.Adapter<ContactsAdapter.ViewHolder>() {
+
 
     /**
      * View Item holder, a recycler item
@@ -206,7 +225,8 @@ class ContactsAdapter(
         private val contactItem: ConstraintLayout = view.findViewById(R.id.contact_card)
         private val nameTextView: TextView = view.findViewById(R.id.contact_card_username)
         private val avatarImageView: ImageView = view.findViewById(R.id.contact_card_avatar)
-
+        private val messageView: ImageButton = view.findViewById(R.id.contact_item_message)
+        private val callView: ImageButton = view.findViewById(R.id.contact_item_call)
 
         fun setData(contact: Contact) {
             setUpListener(contact)
@@ -226,8 +246,23 @@ class ContactsAdapter(
 
             anim.duration = 300
             contactItem.startAnimation(anim)
+            if (contact.avatar == null) {
+                avatarImageView.setImageResource(Consts.DEFAULT_AVATAR)
+            } else {
+                Glide.with(view).load(contact.avatar).into(avatarImageView)
+            }
+            callView.setOnClickListener {
+                val uri = "tel:${contact.number}"
+                val intent = Intent(Intent.ACTION_CALL, Uri.parse(uri))
+//                intent.data = Uri.parse(uri)
+                view.context.startActivity(intent)
+            }
 
-            Glide.with(view).load(contact.avatar).into(avatarImageView)
+            messageView.setOnClickListener {
+                val uri = "sms:${contact.number}"
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
+                view.context.startActivity(intent)
+            }
         }
 
 
@@ -248,7 +283,11 @@ class ContactsAdapter(
         return ViewHolder(view)
     }
 
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        if (position == contacts.size - 1) {
+            onRecyclerReachBottomListener.onBottomReached(position)
+        }
         val contact = contacts[position]
         holder.setData(contact)
     }

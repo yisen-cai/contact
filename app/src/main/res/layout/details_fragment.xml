@@ -22,28 +22,38 @@
             android:layout_height="wrap_content"
             tools:context=".ui.details.DetailsFragment">
 
-            <ImageView
-                android:id="@+id/contact_details_avatar"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/contact_details_avatar_card"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
-                android:contentDescription="@string/contact_details_avatar_des"
+                android:outlineAmbientShadowColor="@color/white"
+                android:outlineSpotShadowColor="@color/white"
+                app:cardCornerRadius="60dp"
+                app:cardElevation="2dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:srcCompat="@tools:sample/avatars" />
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/contact_details_avatar"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:contentDescription="@string/contact_details_avatar_des"
+                    tools:srcCompat="@tools:sample/avatars" />
+            </androidx.cardview.widget.CardView>
 
             <TextView
                 android:id="@+id/contact_details_username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="@string/contact_details"
+                android:text="@{contact.username,default=@string/contact_details_name}"
                 android:textColor="@color/black"
                 android:textSize="25sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/contact_details_avatar" />
+                app:layout_constraintTop_toBottomOf="@+id/contact_details_avatar_card" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/contact_details_related_container"
@@ -74,7 +84,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="4dp"
                     android:rotationX="0"
-                    android:text="@string/contact_details_number"
+                    android:text="@{contact.number, default=@string/contact_details_number}"
                     android:textColor="@color/black"
                     android:textSize="15sp"
                     app:layout_constraintStart_toEndOf="@+id/contact_details_number_info"
@@ -82,7 +92,7 @@
 
                 <TextView
                     android:id="@+id/contact_details_info"
-                    android:layout_width="48dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
                     android:rotationX="0"
@@ -152,6 +162,31 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/contact_detail_history_recycler" />
 
+            <ImageButton
+                android:id="@+id/favorite_contact"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginEnd="24dp"
+                android:background="@color/white"
+                android:contentDescription="@string/favorite_contact_des"
+                android:src="@drawable/ic_like"
+                android:scaleType="centerCrop"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageButton
+                android:id="@+id/edit_contact"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="26dp"
+                android:layout_marginEnd="24dp"
+                android:background="@color/white"
+                android:contentDescription="@string/edit_contact_des"
+                android:scaleType="centerCrop"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/favorite_contact"
+                app:srcCompat="@drawable/ic_edit" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

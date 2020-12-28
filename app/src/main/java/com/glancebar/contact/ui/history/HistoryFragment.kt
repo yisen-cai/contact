@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -30,11 +31,14 @@ class HistoryFragment : Fragment() {
 //            textView.text = it
 //        })
 
+        val textView: TextView = root.findViewById(R.id.today_history_label)
+        textView.setOnClickListener {
+            findNavController().navigate(R.id.history_navigate_to_contacts)
+        }
         return root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        findNavController().navigate(R.id.action_navigation_history_to_navigation_details)
     }
 }

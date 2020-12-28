@@ -1,9 +1,6 @@
 package com.glancebar.contact.persistence.dao
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import com.glancebar.contact.persistence.entity.Contact
 import com.glancebar.contact.persistence.entity.ContactWithHistory
 import io.reactivex.Completable
@@ -27,6 +24,21 @@ interface ContactDao {
     @Query("DELETE FROM t_contact")
     fun deleteAll()
 
+    @Query("select count(*) from t_contact")
+    fun getCount(): Flow<Int>
+
+    @Query("select * from t_contact where id = :contactId limit 1")
+    fun getById(contactId: Long): Contact
+
+    @Query("select * from t_contact where is_marked = 1")
+    fun getFavorite(): Flow<List<Contact>>
+
+    @Update(entity = Contact::class)
+    fun update(contact: Contact): Completable
+
+    @Query("update t_contact set is_marked = :value where id = :contactId")
+    fun updateQuery(contactId: Long, value: Int): Int
+
     @Delete
     fun delete(contact: Contact): Completable
 
@@ -40,6 +52,10 @@ interface ContactDao {
      */
     @Query("select * from t_contact order by username asc")
     fun getAllContacts(): Flow<List<Contact>>
+
+
+    @Query("select * from t_contact order by username asc limit :offset, :size")
+    fun getContacts(offset: Int = 0, size: Int = 20): Flow<List<Contact>>
 
     @Query("select * from t_contact where number=:contactNumber order by username")
     fun getAllContactsAndHistory(contactNumber: String): Flow<ContactWithHistory?>

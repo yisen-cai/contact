@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey
  * @date 2020/12/25
  */
 @Entity(tableName = "t_tag")
-data class Tag(
+class Tag(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val name: String,

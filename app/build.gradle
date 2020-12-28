@@ -20,6 +20,7 @@ android {
     }
     buildFeatures {
         dataBinding true
+        viewBinding true
     }
     buildTypes {
         release {
@@ -61,7 +62,7 @@ dependencies {
 
     // Glide, image downloader
     implementation 'com.github.bumptech.glide:glide:4.11.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+    kapt 'com.github.bumptech.glide:compiler:4.11.0'
 
     // Room database
     def room_version = "2.2.6"
@@ -71,4 +72,15 @@ dependencies {
     implementation "androidx.room:room-ktx:$room_version"
     // optional - Test helpers
     testImplementation "androidx.room:room-testing:$room_version"
+
+
+    // lib number
+//    implementation 'com.googlecode.libphonenumber:libphonenumber:8.12.16-SNAPSHOT'
+//    implementation 'com.googlecode.libphonenumber:geocoder:2.152-SNAPSHOT'
+//    implementation 'com.googlecode.libphonenumber:carrier:1.142-SNAPSHOT'
+
+    implementation 'com.googlecode.libphonenumber:geocoder:2.97'
+    implementation 'com.googlecode.libphonenumber:libphonenumber:8.9.8'
+    implementation 'com.googlecode.libphonenumber:prefixmapper:2.97'
+    implementation 'com.googlecode.libphonenumber:carrier:1.87'
 }

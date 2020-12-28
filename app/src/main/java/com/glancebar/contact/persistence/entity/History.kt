@@ -9,7 +9,7 @@ import androidx.room.*
  * @date 2020/12/25
  */
 @Entity(tableName = "t_history")
-data class History(
+class History(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     val id: Long = 0,

@@ -12,7 +12,7 @@ import androidx.room.PrimaryKey
  * @date 2020/12/24
  */
 @Entity(tableName = "t_contact")
-data class Contact(
+class Contact(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     var id: Long = 0,
@@ -44,6 +44,6 @@ data class Contact(
     var tags: String? = null,
 
     @ColumnInfo(name = "is_marked")
-    var isMarked: Boolean = false
+    var isMarked: Int = 0
 ) {
 }

@@ -9,10 +9,10 @@
     <string name="add_contact">添加联系人</string>
     <string name="contact_name_placeholder">联系人姓名</string>
     <string name="contact_avatar_des">联系人头像</string>
-    <string name="contact_details">联系人姓名</string>
+    <string name="contact_details_name">联系人姓名</string>
     <string name="contact_details_number">手机号</string>
-    <string name="contact_details_avatar_des">Avatar</string>
-    <string name="contact_details_info">Details</string>
+    <string name="contact_details_avatar_des">头像</string>
+    <string name="contact_details_info">联系人详情</string>
     <string name="contact_details_title">最近通话</string>
     <string name="contact_details_settings_title">设置</string>
     <string name="message_button_des">发送短信</string>
@@ -37,7 +37,13 @@
     <string name="add_contact_number_placeholder">请输入手机号</string>
     <string name="save_contact">保存</string>
     <string name="add_contact_success">添加联系人成功</string>
-    <string name="back_action_title">Back</string>
-    <string name="today_history_label">Today</string>
-    <string name="more_history_label">More</string>
+    <string name="back_action_title">返回</string>
+    <string name="today_history_label">今天</string>
+    <string name="more_history_label">更早</string>
+    <string name="favorite_contact_des">Favorite</string>
+    <string name="edit_contact_des">Edit</string>
+    <string name="favoriated">Favoriate success</string>
+    <string name="unfavoriated">Unfavoriated</string>
+    <string name="added_contact">Added Contact</string>
+    <string name="favoriate_card_more_info_des">More</string>
 </resources>
