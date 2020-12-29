@@ -4,8 +4,6 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
 import com.glancebar.contact.persistence.dao.ContactDao
 import com.glancebar.contact.persistence.dao.HistoryDao
 import com.glancebar.contact.persistence.dao.TagDao
@@ -19,7 +17,7 @@ import com.glancebar.contact.persistence.entity.Tag
  * @author Ethan Gary
  * @date 2020/12/23
  */
-@Database(entities = [Contact::class, History::class, Tag::class], version = 2)
+@Database(entities = [Contact::class, History::class, Tag::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun getContactDao(): ContactDao
@@ -30,10 +28,10 @@ abstract class AppDatabase : RoomDatabase() {
         @Volatile
         var INSTANCE: AppDatabase? = null
 
-        // Migration path definition from version 3 to version 4.
-//        val MIGRATION_1_2 = object : Migration(1, 2) {
+//        // Migration path definition from version 3 to version 4.
+//        val MIGRATION_2_3 = object : Migration(2, 3) {
 //            override fun migrate(database: SupportSQLiteDatabase) {
-//
+//                database.execSQL("alter table t_history add column create_time bigint")
 //            }
 //        }
 
@@ -44,7 +42,7 @@ abstract class AppDatabase : RoomDatabase() {
                 AppDatabase::class.java,
                 "sample-db"
             ).fallbackToDestructiveMigration()
-//                .addMigrations(MIGRATION_1_2)
+//                .addMigrations(MIGRATION_2_3)
                 .build()
         }
     }

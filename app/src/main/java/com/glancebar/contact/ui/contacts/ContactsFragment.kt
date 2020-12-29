@@ -171,6 +171,8 @@ class ContactsFragment : Fragment() {
         when (requestCode) {
             ActivityResult.ADD_CONTACT.code -> {
                 // TODO: added Contact
+                contacts.clear()
+                loadContactsFromDatabase()
             }
         }
     }
@@ -215,13 +217,15 @@ class ContactsFragment : Fragment() {
                                 )
                             )
 
-                            contactRepository.insert(
+                            val result = contactRepository.insert(
                                 Contact(
                                     username = name,
                                     number = phoneNo.replace(" ", "")
                                 )
                             )
-                            importedCount += 1
+                            if (result > 0) {
+                                importedCount += 1
+                            }
                         }
                         contacts.clear()
                         loadContactsFromDatabase()
@@ -230,6 +234,7 @@ class ContactsFragment : Fragment() {
                             "${getString(R.string.imported_contacts)} $importedCount ${getString(R.string.unit)}",
                             Toast.LENGTH_SHORT
                         ).show()
+                        importedCount = 0
                     }
                     pCur?.close()
                 }

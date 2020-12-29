@@ -15,9 +15,13 @@ class History(
     val id: Long = 0,
     val last: Int? = 0,
     val ringLast: Int? = 0,
-    val contactId: Long? = 0,
+    var contactId: Long? = 0,
     val isCall: Boolean = false,
-    val isMissedCall: Boolean = false
+    val isMissedCall: Boolean = false,
+    @ColumnInfo(name = "number")
+    val number: String? = null,
+    @ColumnInfo(name = "create_time")
+    val createTime: Long = 0,
 )
 
 /**

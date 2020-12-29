@@ -16,8 +16,8 @@ class ContactRepository(
     private val contactDao: ContactDao = database.getContactDao()
 ) {
 
-    fun insert(contact: Contact) {
-        DataAsyncTask(contactDao).execute(contact, 1)
+    fun insert(contact: Contact): Int {
+        return DataAsyncTask(contactDao).execute(contact, 1).get() as Int
     }
 
     fun favorite(contact: Contact) {
@@ -42,7 +42,13 @@ class ContactRepository(
             override fun doInBackground(vararg params: Any?): Any? {
                 when (params[1]) {
                     1 -> {
-                        dao.insert(params[0] as Contact)
+                        val contact = params[0] as Contact
+                        val result = dao.existsByName(contact.username!!)
+                        if (result == 0) {
+                            dao.insert(contact)
+                            return 1
+                        }
+                        return 0
                     }
                     2 -> {
                         val contact = params[0] as Contact

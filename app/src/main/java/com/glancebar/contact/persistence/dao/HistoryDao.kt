@@ -3,8 +3,8 @@ package com.glancebar.contact.persistence.dao
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.Query
 import com.glancebar.contact.persistence.entity.History
-import io.reactivex.Completable
 
 
 /**
@@ -15,12 +15,15 @@ import io.reactivex.Completable
 @Dao
 interface HistoryDao {
 
-    @Insert
-    fun insert(history: History): Completable
+    @Query("select count(*) from t_history where number = :number and create_time = :createTime")
+    fun findByNumberAndCreateTime(number: String, createTime: Long): Int
 
     @Insert
-    fun insertAll(vararg history: History): Completable
+    fun insert(history: History)
+
+    @Insert
+    fun insertAll(vararg history: History)
 
     @Delete
-    fun delete(history: History): Completable
+    fun delete(history: History)
 }

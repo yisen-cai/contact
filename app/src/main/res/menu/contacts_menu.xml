@@ -20,4 +20,10 @@
         android:icon="@drawable/ic_options"
         android:title="@string/contact_more"
         app:showAsAction="collapseActionView" />
+
+    <item
+        android:id="@+id/backup_data"
+        android:icon="@drawable/ic_backup"
+        android:title="@string/backup_data_title"
+        app:showAsAction="collapseActionView" />
 </menu>

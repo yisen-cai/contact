@@ -53,11 +53,11 @@ class MainActivity : AppCompatActivity() {
                 Manifest.permission.READ_CONTACTS,
                 Manifest.permission.CALL_PHONE,
                 Manifest.permission.SEND_SMS,
-                Manifest.permission.INTERNET
+                Manifest.permission.INTERNET,
+                Manifest.permission.READ_CALL_LOG
             ),
             0
         )
-
         navView.setupWithNavController(navController)
     }
 

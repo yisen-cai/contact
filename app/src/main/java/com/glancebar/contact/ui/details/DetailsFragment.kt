@@ -208,7 +208,7 @@ class DetailsFragment : Fragment() {
 
     private fun loadContactAndHistory(number: String) {
         viewLifecycleOwner.lifecycleScope.launch {
-            contactDao.getAllContactsAndHistory(number).collect { it ->
+            contactDao.getAllContactsAndHistoryByName(number).collect { it ->
                 it?.contact?.also {
                     binding.contact = it
                     if (it.avatar == null) {

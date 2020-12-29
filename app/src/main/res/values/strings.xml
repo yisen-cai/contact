@@ -58,4 +58,8 @@
     <string name="delete_success">Delete Success</string>
     <string name="imported_contacts">Imported: </string>
     <string name="unit">contacts</string>
+    <string name="backup_data_title">Backup</string>
+    <string name="sync_history_tool">Sync call log</string>
+    <string name="synced_history">Sync success: </string>
+    <string name="sync_item">call logs</string>
 </resources>

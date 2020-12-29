@@ -33,8 +33,11 @@ interface ContactDao {
     @Query("select * from t_contact where id = :contactId limit 1")
     fun getById(contactId: Long): Flow<Contact>
 
-    @Query("select * from t_contact where is_marked = 1")
+    @Query("select * from t_contact where is_marked = 1 order by username")
     fun getFavorite(): Flow<List<Contact>>
+
+    @Query("select id from t_contact where number = :number limit 1")
+    fun getByNumber(number: String): Long?
 
     @Update
     fun update(contact: Contact): Int
@@ -56,10 +59,17 @@ interface ContactDao {
     @Query("select * from t_contact order by username asc")
     fun getAllContacts(): Flow<List<Contact>>
 
+    @Query("select count(*) from t_contact where username = :name")
+    fun existsByName(name: String): Int
+
 
     @Query("select * from t_contact order by username asc")
     fun getContacts(): Flow<List<Contact>>
 
+
     @Query("select * from t_contact where number=:contactNumber order by username")
-    fun getAllContactsAndHistory(contactNumber: String): Flow<ContactWithHistory?>
+    fun getAllContactsAndHistoryByName(contactNumber: String): Flow<ContactWithHistory?>
+
+//    @Query("select * from t_contact order by username")
+//    fun getAllContactsAndHistory(contactNumber: String): Flow<ContactWithHistory?>
 }
