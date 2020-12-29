@@ -1,17 +1,16 @@
 package com.glancebar.contact.ui.details
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -21,6 +20,8 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.glancebar.contact.AddContactActivity
+import com.glancebar.contact.AddContactActivity.Companion.CONTACT_ID
 import com.glancebar.contact.MainActivity
 import com.glancebar.contact.R
 import com.glancebar.contact.databinding.DetailsFragmentBinding
@@ -30,6 +31,7 @@ import com.glancebar.contact.persistence.database.AppDatabase
 import com.glancebar.contact.persistence.entity.Contact
 import com.glancebar.contact.persistence.entity.History
 import com.glancebar.contact.persistence.repository.ContactRepository
+import com.glancebar.contact.ui.contacts.ActivityResult
 import com.glancebar.contact.utils.Consts
 import com.glancebar.contact.utils.OnRecyclerReachBottomListener
 import com.glancebar.contact.utils.PhoneUtil
@@ -49,10 +51,12 @@ class DetailsFragment : Fragment() {
     private var contactRepository = ContactRepository(AppDatabase.INSTANCE!!)
     private lateinit var binding: DetailsFragmentBinding
     private lateinit var returnCallback: OnBackPressedCallback
+    private var favoriteItem: MenuItem? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
         // This callback will only be called when MyFragment is at least Started.
 //        returnCallback = requireActivity().onBackPressedDispatcher.addCallback(this) {
 //            findNavController().navigate(R.id.detail_back_to_history)
@@ -81,6 +85,70 @@ class DetailsFragment : Fragment() {
 
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.favorite_contact -> {
+                viewLifecycleOwner.lifecycleScope.launch {
+                    if (binding.contact!!.isMarked == 1) {
+                        binding.contact!!.isMarked = 0
+                        contactRepository.favorite(binding.contact!!)
+                        Toast.makeText(
+                            context,
+                            getString(R.string.unfavoriated),
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
+                        favoriteItem?.icon =
+                            ContextCompat.getDrawable(context!!, R.drawable.ic_like)
+                    } else {
+                        binding.contact!!.isMarked = 1
+                        contactRepository.favorite(binding.contact!!)
+                        Toast.makeText(context, getString(R.string.favoriated), Toast.LENGTH_SHORT)
+                            .show()
+                        favoriteItem?.icon =
+                            ContextCompat.getDrawable(context!!, R.drawable.ic_liked)
+                    }
+                }
+            }
+            R.id.edit_contact -> {
+                val intent = Intent(context, AddContactActivity::class.java)
+                intent.putExtra(CONTACT_ID, binding.contact!!.id)
+                startActivityForResult(intent, ActivityResult.ADD_CONTACT.code)
+            }
+            R.id.delete_contact -> {
+                val alertDialog: AlertDialog = requireActivity().let {
+                    val builder = AlertDialog.Builder(it)
+                    builder.setMessage(getString(R.string.sure_to_delete)).setTitle(R.string.alert)
+                    builder.apply {
+                        setPositiveButton(
+                            R.string.ok
+                        ) { dialog, id ->
+                            contactRepository.delete(contact = binding.contact!!)
+                            Toast.makeText(
+                                context!!,
+                                getString(R.string.delete_success),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            navigateBack()
+                        }
+                        setNegativeButton(
+                            R.string.cancel
+                        ) { dialog, id ->
+                            // User cancelled the dialog
+                        }
+                    }
+                    builder.create()
+                }
+                alertDialog.show()
+                return true
+            }
+            else -> {
+                if (navigateBack()) return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun navigateBack(): Boolean {
         when (args.sourceFragment) {
             NavigationDetailsEnum.CONTACTS -> {
                 findNavController().navigate(R.id.detail_back_to_contact)
@@ -93,7 +161,15 @@ class DetailsFragment : Fragment() {
                 findNavController().navigate(R.id.detail_back_to_history)
             }
         }
-        return super.onOptionsItemSelected(item)
+        return false
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.details_menu, menu)
+        favoriteItem = menu.findItem(R.id.favorite_contact)
+        // TODO: 初始化时机不知道对不对
     }
 
     @SuppressLint("WrongConstant")
@@ -107,29 +183,6 @@ class DetailsFragment : Fragment() {
             val uri = "sms:${binding.contact?.number}"
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
             startActivity(intent)
-        }
-
-        // TODO: not update
-        binding.favoriteContact.setOnClickListener {
-            viewLifecycleOwner.lifecycleScope.launch {
-                if (binding.contact!!.isMarked == 1) {
-                    binding.contact!!.isMarked = 0
-                    contactRepository.update(binding.contact!!)
-                    Toast.makeText(context, getString(R.string.unfavoriated), Toast.LENGTH_SHORT)
-                        .show()
-                    binding.favoriteContact.setImageResource(R.drawable.ic_like)
-                } else {
-                    binding.contact!!.isMarked = 1
-                    contactRepository.update(binding.contact!!)
-                    Toast.makeText(context, getString(R.string.favoriated), Toast.LENGTH_SHORT)
-                        .show()
-                    binding.favoriteContact.setImageResource(R.drawable.ic_liked)
-                }
-            }
-        }
-
-        binding.editContact.setOnClickListener {
-
         }
     }
 
@@ -164,14 +217,15 @@ class DetailsFragment : Fragment() {
                         Glide.with(requireView()).load(it.avatar).into(binding.contactDetailsAvatar)
                     }
                     if (it.isMarked == 1) {
-                        binding.favoriteContact.setImageResource(R.drawable.ic_liked)
+                        favoriteItem?.icon =
+                            ContextCompat.getDrawable(context!!, R.drawable.ic_liked)
                     }
-                    val numberInfo = PhoneUtil.getPhoneModel(it.number!!)
+                    val numberInfo = PhoneUtil.getPhoneModel(it.number!!.replace(" ", ""))
                     if (numberInfo == null) {
                         binding.contactDetailsInfo.text = "未知号码"
                     } else {
                         binding.contactDetailsInfo.text =
-                            PhoneUtil.getPhoneModel(it.number!!).toString()
+                            PhoneUtil.getPhoneModel(it.number!!.replace(" ", "")).toString()
                     }
                 }
                 it?.histories?.forEach { history ->

@@ -13,16 +13,11 @@ import android.util.Log
 import android.view.*
 import android.view.animation.Animation
 import android.view.animation.ScaleAnimation
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.SearchView
-import android.widget.TextView
+import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -45,11 +40,13 @@ class ContactsFragment : Fragment() {
         fun newInstance() = ContactsFragment()
     }
 
-    private lateinit var viewModel: ContactsViewModel
     private val contactDao = AppDatabase.INSTANCE!!.getContactDao()
     private val contactRepository = ContactRepository()
     private lateinit var recyclerView: RecyclerView
     private var query: String? = null
+    private lateinit var contacts: MutableList<Contact>
+    private lateinit var includeView: View
+    private var importedCount = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,11 +60,22 @@ class ContactsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        // TODO: difference
+        contacts = mutableListOf()
         (requireActivity() as MainActivity).showNavigator()
         val root = inflater.inflate(R.layout.contacts_fragment, container, false)
-        viewModel = ViewModelProvider(this).get(ContactsViewModel::class.java)
+        includeView = root.findViewById(R.id.is_empty_view)
         initRecyclerView(root)
         return root
+    }
+
+
+    private fun toggleIncludeView(contactsList: MutableList<Contact>) {
+        if (contactsList.size == 0) {
+            includeView.visibility = View.VISIBLE
+        } else {
+            includeView.visibility = View.GONE
+        }
     }
 
 
@@ -76,19 +84,21 @@ class ContactsFragment : Fragment() {
         loadContactsFromDatabase()
     }
 
-    private fun loadContactsFromDatabase() {
 
+    private fun loadContactsFromDatabase() {
         viewLifecycleOwner.lifecycleScope.launch {
             if (query != null && notEmpty(query!!)) {
                 val queryString = "%$query%"
                 contactDao.findByNameLikeOrNumberLike(queryString, queryString).collect {
-                    viewModel.contacts.value!!.clear()
-                    viewModel.contacts.value!!.addAll(it)
+                    contacts.clear()
+                    contacts.addAll(it)
+                    toggleIncludeView(contacts)
                     recyclerView.adapter!!.notifyDataSetChanged()
                 }
             } else {
                 contactDao.getContacts().collect {
-                    viewModel.contacts.value!!.addAll(it)
+                    contacts.addAll(it)
+                    toggleIncludeView(contacts)
                     // notify UI update
                     recyclerView.adapter!!.notifyDataSetChanged()
                 }
@@ -97,7 +107,6 @@ class ContactsFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             contactDao.getCount().collect {
-                viewModel.contactPage.value!!.total = it
             }
         }
     }
@@ -106,13 +115,13 @@ class ContactsFragment : Fragment() {
         recyclerView = root.findViewById(R.id.contact_recycler)
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter =
-            ContactsAdapter(viewModel.contacts.value!!,
+            ContactsAdapter(contacts,
                 object : OnRecyclerReachBottomListener {
                     override fun onBottomReached(position: Int) {
-                        if (viewModel.contactPage.value!!.total > viewModel.contactPage.value!!.offset) {
-                            viewModel.contactPage.value!!.offset = position + 1
-                            loadContactsFromDatabase()
-                        }
+//                        if (o.total > viewModel.contactPage.value!!.offset) {
+//                            viewModel.contactPage.value!!.offset = position + 1
+//                            loadContactsFromDatabase()
+//                        }
                     }
                 })
     }
@@ -132,10 +141,8 @@ class ContactsFragment : Fragment() {
 //                startActivity(intent)
                 true
             }
-
-            R.id.settings1 -> {
-                Log.i("OptionItem", "onOptionsItemSelected: moreOptions")
-                findNavController().navigate(R.id.contact_navigate_to_search)
+            R.id.import_contacts -> {
+                getContactList()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -207,10 +214,22 @@ class ContactsFragment : Fragment() {
                                     ContactsContract.CommonDataKinds.Phone.NUMBER
                                 )
                             )
-                            Log.i("TAG", "Name: $name")
-                            Log.i("TAG", "Phone Number: $phoneNo")
-                            Log.i("TAG", "Phone URI: $avatar")
+
+                            contactRepository.insert(
+                                Contact(
+                                    username = name,
+                                    number = phoneNo.replace(" ", "")
+                                )
+                            )
+                            importedCount += 1
                         }
+                        contacts.clear()
+                        loadContactsFromDatabase()
+                        Toast.makeText(
+                            context!!,
+                            "${getString(R.string.imported_contacts)} $importedCount ${getString(R.string.unit)}",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                     pCur?.close()
                 }
@@ -220,6 +239,7 @@ class ContactsFragment : Fragment() {
     }
 
     fun getCallHistory() {
+
     }
 }
 

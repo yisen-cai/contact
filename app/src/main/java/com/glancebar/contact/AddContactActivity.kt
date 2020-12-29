@@ -14,6 +14,9 @@ import com.glancebar.contact.persistence.database.AppDatabase
 import com.glancebar.contact.persistence.entity.Contact
 import com.glancebar.contact.persistence.repository.ContactRepository
 import com.glancebar.contact.utils.notEmpty
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 
 class AddContactActivity : AppCompatActivity() {
@@ -27,29 +30,35 @@ class AddContactActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_contact)
 
+        initDataBinding()
+
         //新页面接收数据
         val bundle = this.intent.extras
-        //接收name值
-        val contactId = bundle!!.getLong(CONTACT_ID)
 
-//        loadContactData(contactId)
-
-        initDataBinding()
+        // ready to update
+        if (bundle != null) {
+            title = getString(R.string.edit_contact_des)
+            val contactId = bundle.getLong(CONTACT_ID)
+            loadContactData(contactId)
+        }
 
         setLabelText()
     }
 
     private fun loadContactData(contactId: Long) {
-        val result = contactRepository.getById(contactId)
-        contact.id = result.id
-        contact.username = result.username
-        contact.number = result.number
-        contact.location = result.location
-        contact.isMarked = result.isMarked
-        contact.email = result.email
-        contact.company = result.company
-        contact.avatar = result.avatar
-        contact.telephone = result.telephone
+        GlobalScope.launch {
+            contactDao.getById(contactId).collect {
+                contact.id = it.id
+                contact.username = it.username
+                contact.number = it.number
+                contact.location = it.location
+                contact.isMarked = it.isMarked
+                contact.email = it.email
+                contact.company = it.company
+                contact.avatar = it.avatar
+                contact.telephone = it.telephone
+            }
+        }
     }
 
     private fun initDataBinding() {
@@ -76,7 +85,21 @@ class AddContactActivity : AppCompatActivity() {
     private fun saveContact() {
         // TODO: contact validation
         if (notEmpty(contact.number!!) && notEmpty(contact.username!!)) {
-            contactRepository.insert(contact)
+            if (contact.id == 0L) {
+                contactRepository.insert(contact)
+                Toast.makeText(
+                    this,
+                    getString(R.string.add_contact_success),
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                contactRepository.update(contact)
+                Toast.makeText(
+                    this,
+                    getString(R.string.update_contact_success),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
         Toast.makeText(this, getString(R.string.added_contact), Toast.LENGTH_SHORT).show()
         val data = Intent()
@@ -97,7 +120,6 @@ class AddContactActivity : AppCompatActivity() {
         mobileTipTextView.text =
             Html.fromHtml(mobileTipText, Html.FROM_HTML_MODE_LEGACY, null, null)
     }
-
 
     companion object {
         const val CONTACT_ID = "contact_id"

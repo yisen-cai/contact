@@ -19,7 +19,7 @@
     <string name="contact_details_number_des">Phone Number</string>
     <string name="contact_search_des">Search Contact</string>
     <string name="contact_add">Add Contact</string>
-    <string name="contact_more">More options</string>
+    <string name="contact_more">Import Contact</string>
     <string name="history_info_des">Call type</string>
     <string name="options">More options</string>
     <string name="add_contact_name_tip_string">Name</string>
@@ -47,4 +47,15 @@
     <string name="added_contact">Added Contact</string>
     <string name="favoriate_card_more_info_des">More</string>
     <string name="search_hint">Name or Number</string>
+    <string name="title_detail">Contact Detail</string>
+    <string name="update_contact_success">Update Success</string>
+    <string name="empty_des">No Data</string>
+    <string name="delete_contact_title">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+    <string name="sure_to_delete">Are you sure to delete?</string>
+    <string name="alert">Alert</string>
+    <string name="delete_success">Delete Success</string>
+    <string name="imported_contacts">Imported: </string>
+    <string name="unit">contacts</string>
 </resources>

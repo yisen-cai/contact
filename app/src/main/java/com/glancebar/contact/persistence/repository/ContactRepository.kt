@@ -20,8 +20,12 @@ class ContactRepository(
         DataAsyncTask(contactDao).execute(contact, 1)
     }
 
-    fun update(contact: Contact) {
+    fun favorite(contact: Contact) {
         DataAsyncTask(contactDao).execute(contact, 2)
+    }
+
+    fun update(contact: Contact) {
+        DataAsyncTask(contactDao).execute(contact, 5)
     }
 
     fun delete(contact: Contact) {
@@ -50,6 +54,9 @@ class ContactRepository(
                     }
                     4 -> {
                         return dao.getById(params[0] as Long)
+                    }
+                    5 -> {
+                        dao.update(params[0] as Contact)
                     }
                 }
                 return null

@@ -40,18 +40,12 @@
             app:destination="@id/navigation_details"
             app:enterAnim="@anim/nav_default_pop_enter_anim"
             app:exitAnim="@anim/nav_default_pop_exit_anim" />
-        <action
-            android:id="@+id/contact_navigate_to_search"
-            app:destination="@id/search_fragment"
-            app:enterAnim="@android:anim/slide_in_left"
-            app:exitAnim="@android:anim/slide_out_right"
-            app:popUpTo="@id/navigation_contacts" />
     </fragment>
 
     <fragment
         android:id="@+id/navigation_details"
         android:name="com.glancebar.contact.ui.details.DetailsFragment"
-        android:label="Details"
+        android:label="@string/title_detail"
         tools:layout="@layout/details_fragment">
         <argument
             android:name="contactNumber"
@@ -68,13 +62,7 @@
             app:destination="@id/navigation_favorite" />
         <argument
             android:name="sourceFragment"
-            app:argType="com.glancebar.contact.enums.NavigationDetailsEnum"
-            android:defaultValue="CONTACTS" />
+            android:defaultValue="CONTACTS"
+            app:argType="com.glancebar.contact.enums.NavigationDetailsEnum" />
     </fragment>
-    <fragment
-        android:id="@+id/search_fragment"
-        android:name="com.glancebar.contact.ui.search.SearchFragment"
-        android:label="searchFragment"
-        tools:layout="@layout/search_fragment" />
-
 </navigation>

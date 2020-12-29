@@ -19,7 +19,7 @@ import com.glancebar.contact.persistence.entity.Tag
  * @author Ethan Gary
  * @date 2020/12/23
  */
-@Database(entities = [Contact::class, History::class, Tag::class], version = 1)
+@Database(entities = [Contact::class, History::class, Tag::class], version = 2)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun getContactDao(): ContactDao
@@ -31,7 +31,7 @@ abstract class AppDatabase : RoomDatabase() {
         var INSTANCE: AppDatabase? = null
 
         // Migration path definition from version 3 to version 4.
-//        val MIGRATION_3_4 = object : Migration(1, 2) {
+//        val MIGRATION_1_2 = object : Migration(1, 2) {
 //            override fun migrate(database: SupportSQLiteDatabase) {
 //
 //            }
@@ -44,7 +44,7 @@ abstract class AppDatabase : RoomDatabase() {
                 AppDatabase::class.java,
                 "sample-db"
             ).fallbackToDestructiveMigration()
-//                        .addMigrations(MIGRATION_3_4)
+//                .addMigrations(MIGRATION_1_2)
                 .build()
         }
     }

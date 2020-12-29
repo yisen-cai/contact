@@ -31,19 +31,19 @@ interface ContactDao {
     fun getCount(): Flow<Int>
 
     @Query("select * from t_contact where id = :contactId limit 1")
-    fun getById(contactId: Long): Contact
+    fun getById(contactId: Long): Flow<Contact>
 
     @Query("select * from t_contact where is_marked = 1")
     fun getFavorite(): Flow<List<Contact>>
 
-    @Update(entity = Contact::class)
-    fun update(contact: Contact): Completable
+    @Update
+    fun update(contact: Contact): Int
 
     @Query("update t_contact set is_marked = :value where id = :contactId")
     fun updateQuery(contactId: Long, value: Int): Int
 
     @Delete
-    fun delete(contact: Contact): Completable
+    fun delete(contact: Contact): Int
 
 //    @Query("select * from word_table order by word asc")
 //    fun getAllWords(): List<Word>

@@ -161,33 +161,6 @@
                 android:textSize="15sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/contact_detail_history_recycler" />
-
-            <ImageButton
-                android:id="@+id/favorite_contact"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginTop="30dp"
-                android:layout_marginEnd="24dp"
-                android:background="@color/white"
-                android:contentDescription="@string/favorite_contact_des"
-                android:src="@drawable/ic_like"
-                android:scaleType="centerCrop"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageButton
-                android:id="@+id/edit_contact"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginTop="26dp"
-                android:layout_marginEnd="24dp"
-                android:background="@color/white"
-                android:contentDescription="@string/edit_contact_des"
-                android:scaleType="centerCrop"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/favorite_contact"
-                app:srcCompat="@drawable/ic_edit" />
-
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </layout>

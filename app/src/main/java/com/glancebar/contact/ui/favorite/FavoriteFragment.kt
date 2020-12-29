@@ -35,6 +35,7 @@ class FavoriteFragment : Fragment() {
     private lateinit var viewModel: FavoriteViewModel
     private val contactDao = AppDatabase.INSTANCE!!.getContactDao()
     private lateinit var contacts: MutableList<Contact>
+    private lateinit var favoriteEmptyView: View
 
 
     override fun onCreateView(
@@ -44,6 +45,7 @@ class FavoriteFragment : Fragment() {
         (requireActivity() as MainActivity).showNavigator()
         val root = inflater.inflate(R.layout.favorite_fragment, container, false)
         viewModel = ViewModelProvider(this).get(FavoriteViewModel::class.java)
+        favoriteEmptyView = root.findViewById(R.id.is_favorite_empty)
         contacts = mutableListOf()
         initRecyclerView(root)
 
@@ -54,11 +56,18 @@ class FavoriteFragment : Fragment() {
     private fun loadFavorites() {
         viewLifecycleOwner.lifecycleScope.launch {
             contactDao.getFavorite().collect {
-                it.forEach { contact ->
-                    contacts.add(contact)
-                }
+                contacts.addAll(it)
+                toggleIncludeView(contacts)
                 favoriteRecyclerView.adapter?.notifyDataSetChanged()
             }
+        }
+    }
+
+    private fun toggleIncludeView(contactsList: MutableList<Contact>) {
+        if (contactsList.size == 0) {
+            favoriteEmptyView.visibility = View.VISIBLE
+        } else {
+            favoriteEmptyView.visibility = View.INVISIBLE
         }
     }
 
