@@ -46,4 +46,6 @@
     <string name="unfavoriated">Unfavoriated</string>
     <string name="added_contact">Added Contact</string>
     <string name="favoriate_card_more_info_des">More</string>
+    <string name="search_hint">Name or Number</string>
+    <string name="contact_more_options">更多</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.glancebar.contact
 
+import android.Manifest
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -45,8 +46,21 @@ class MainActivity : AppCompatActivity() {
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
+
+
+        requestPermissions(
+            arrayOf(
+                Manifest.permission.READ_CONTACTS,
+                Manifest.permission.CALL_PHONE,
+                Manifest.permission.SEND_SMS,
+                Manifest.permission.INTERNET
+            ),
+            0
+        )
+
         navView.setupWithNavController(navController)
     }
+
 
     fun hideNavigator() {
         with(navView) {

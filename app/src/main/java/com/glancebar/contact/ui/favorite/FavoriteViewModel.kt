@@ -7,7 +7,4 @@ import com.glancebar.contact.persistence.entity.Contact
 
 class FavoriteViewModel : ViewModel() {
 
-    var contacts: LiveData<MutableList<Contact>> = MutableLiveData<MutableList<Contact>>().apply {
-        value = mutableListOf()
-    }
 }

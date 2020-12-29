@@ -39,11 +39,12 @@
     <string name="back_action_title">Back</string>
     <string name="today_history_label">Today</string>
     <string name="more_history_label">More</string>
-    <string name="contact_more_options">m</string>
+    <string name="contact_more_options">More</string>
     <string name="favorite_contact_des">Favorite</string>
     <string name="edit_contact_des">Edit</string>
     <string name="favoriated">Favoriate success</string>
     <string name="unfavoriated">Unfavoriated</string>
     <string name="added_contact">Added Contact</string>
     <string name="favoriate_card_more_info_des">More</string>
+    <string name="search_hint">Name or Number</string>
 </resources>

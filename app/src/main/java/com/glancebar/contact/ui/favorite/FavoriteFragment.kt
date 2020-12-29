@@ -34,6 +34,7 @@ class FavoriteFragment : Fragment() {
     private lateinit var favoriteRecyclerView: RecyclerView
     private lateinit var viewModel: FavoriteViewModel
     private val contactDao = AppDatabase.INSTANCE!!.getContactDao()
+    private lateinit var contacts: MutableList<Contact>
 
 
     override fun onCreateView(
@@ -43,11 +44,10 @@ class FavoriteFragment : Fragment() {
         (requireActivity() as MainActivity).showNavigator()
         val root = inflater.inflate(R.layout.favorite_fragment, container, false)
         viewModel = ViewModelProvider(this).get(FavoriteViewModel::class.java)
-
+        contacts = mutableListOf()
         initRecyclerView(root)
-        if (viewModel.contacts.value!!.size == 0) {
-            loadFavorites()
-        }
+
+        loadFavorites()
         return root
     }
 
@@ -55,7 +55,7 @@ class FavoriteFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             contactDao.getFavorite().collect {
                 it.forEach { contact ->
-                    viewModel.contacts.value?.add(contact)
+                    contacts.add(contact)
                 }
                 favoriteRecyclerView.adapter?.notifyDataSetChanged()
             }
@@ -66,7 +66,7 @@ class FavoriteFragment : Fragment() {
         favoriteRecyclerView = root.findViewById(R.id.favorite_recycler)
         favoriteRecyclerView.layoutManager = GridLayoutManager(context, 2)
 //        favoriteRecyclerView.layoutManager.height =
-        favoriteRecyclerView.adapter = FavoriteRecyclerAdapter(viewModel.contacts.value!!)
+        favoriteRecyclerView.adapter = FavoriteRecyclerAdapter(contacts)
     }
 
 

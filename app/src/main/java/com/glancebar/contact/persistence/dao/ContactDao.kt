@@ -21,6 +21,9 @@ interface ContactDao {
     @Query("select * from t_contact where username like :username order by username")
     fun findByName(username: String): List<Contact>
 
+    @Query("select * from t_contact where username like :name or number like :number order by username")
+    fun findByNameLikeOrNumberLike(name: String, number: String): Flow<List<Contact>>
+
     @Query("DELETE FROM t_contact")
     fun deleteAll()
 
@@ -54,8 +57,8 @@ interface ContactDao {
     fun getAllContacts(): Flow<List<Contact>>
 
 
-    @Query("select * from t_contact order by username asc limit :offset, :size")
-    fun getContacts(offset: Int = 0, size: Int = 20): Flow<List<Contact>>
+    @Query("select * from t_contact order by username asc")
+    fun getContacts(): Flow<List<Contact>>
 
     @Query("select * from t_contact where number=:contactNumber order by username")
     fun getAllContactsAndHistory(contactNumber: String): Flow<ContactWithHistory?>

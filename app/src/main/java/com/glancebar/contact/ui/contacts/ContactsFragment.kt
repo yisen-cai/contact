@@ -1,7 +1,9 @@
 package com.glancebar.contact.ui.contacts
 
 import android.app.Activity.RESULT_OK
+import android.app.SearchManager
 import android.content.ContentResolver
+import android.content.Context
 import android.content.Intent
 import android.database.Cursor
 import android.net.Uri
@@ -13,6 +15,7 @@ import android.view.animation.Animation
 import android.view.animation.ScaleAnimation
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.SearchView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
@@ -31,6 +34,7 @@ import com.glancebar.contact.persistence.entity.Contact
 import com.glancebar.contact.persistence.repository.ContactRepository
 import com.glancebar.contact.utils.Consts
 import com.glancebar.contact.utils.OnRecyclerReachBottomListener
+import com.glancebar.contact.utils.notEmpty
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -45,9 +49,12 @@ class ContactsFragment : Fragment() {
     private val contactDao = AppDatabase.INSTANCE!!.getContactDao()
     private val contactRepository = ContactRepository()
     private lateinit var recyclerView: RecyclerView
+    private var query: String? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        query = requireActivity().intent.getStringExtra(SearchManager.QUERY)
+
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
     }
@@ -70,17 +77,21 @@ class ContactsFragment : Fragment() {
     }
 
     private fun loadContactsFromDatabase() {
+
         viewLifecycleOwner.lifecycleScope.launch {
-            contactDao.getContacts(
-                offset = viewModel.contactPage.value!!.offset,
-                viewModel.contactPage.value!!.size
-            ).collect {
-                it.forEach { contact ->
-                    viewModel.contacts.value!!.add(contact)
-                    Log.i("TAG", "loadContactsFromDatabase: $it")
+            if (query != null && notEmpty(query!!)) {
+                val queryString = "%$query%"
+                contactDao.findByNameLikeOrNumberLike(queryString, queryString).collect {
+                    viewModel.contacts.value!!.clear()
+                    viewModel.contacts.value!!.addAll(it)
+                    recyclerView.adapter!!.notifyDataSetChanged()
                 }
-                // notify UI update
-                recyclerView.adapter!!.notifyDataSetChanged()
+            } else {
+                contactDao.getContacts().collect {
+                    viewModel.contacts.value!!.addAll(it)
+                    // notify UI update
+                    recyclerView.adapter!!.notifyDataSetChanged()
+                }
             }
         }
 
@@ -117,6 +128,8 @@ class ContactsFragment : Fragment() {
 
             R.id.contact_search -> {
                 Log.i("OptionItem", "onOptionsItemSelected: searchContact")
+//                val intent = Intent(context, SearchActivity::class.java)
+//                startActivity(intent)
                 true
             }
 
@@ -132,6 +145,15 @@ class ContactsFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.contacts_menu, menu)
+        // Associate searchable configuration with the SearchView
+        val searchManager =
+            requireActivity().getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        (menu.findItem(R.id.contact_search).actionView as SearchView).apply {
+            setSearchableInfo(searchManager.getSearchableInfo(requireActivity().componentName))
+        }
+        val searchItem = menu.findItem(R.id.contact_search)
+        searchItem.expandActionView()
+        val searchView = searchItem.actionView
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -285,9 +307,9 @@ class ContactsAdapter(
 
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        if (position == contacts.size - 1) {
-            onRecyclerReachBottomListener.onBottomReached(position)
-        }
+//        if (position == contacts.size - 1) {
+//            onRecyclerReachBottomListener.onBottomReached(position)
+//        }
         val contact = contacts[position]
         holder.setData(contact)
     }
