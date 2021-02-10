@@ -67,8 +67,8 @@ interface ContactDao {
     fun getContacts(): Flow<List<Contact>>
 
 
-    @Query("select * from t_contact where number=:contactNumber order by username")
-    fun getAllContactsAndHistoryByName(contactNumber: String): Flow<ContactWithHistory?>
+    @Query("select * from t_contact where id=:contactId order by username")
+    fun getAllContactsAndHistoryByName(contactId: Long): Flow<ContactWithHistory?>
 
 //    @Query("select * from t_contact order by username")
 //    fun getAllContactsAndHistory(contactNumber: String): Flow<ContactWithHistory?>

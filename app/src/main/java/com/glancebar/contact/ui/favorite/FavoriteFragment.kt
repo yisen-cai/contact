@@ -107,7 +107,7 @@ class FavoriteRecyclerAdapter(
             moreInfoView.setOnClickListener {
                 val actions =
                     FavoriteFragmentDirections.actionNavigationFavoriteToNavigationDetails(
-                        contactNumber = contact.number!!,
+                        contactId = contact.id,
                         sourceFragment = NavigationDetailsEnum.FAVORITE
                     )
                 view.findNavController().navigate(actions)

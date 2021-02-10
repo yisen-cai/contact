@@ -84,7 +84,7 @@ class AddContactActivity : AppCompatActivity() {
 
     private fun saveContact() {
         // TODO: contact validation
-        if (notEmpty(contact.number!!) && notEmpty(contact.username!!)) {
+        if (notEmpty(contact.number) && notEmpty(contact.username)) {
             if (contact.id == 0L) {
                 contactRepository.insert(contact)
                 Toast.makeText(
@@ -100,12 +100,16 @@ class AddContactActivity : AppCompatActivity() {
                     Toast.LENGTH_SHORT
                 ).show()
             }
+
+            Toast.makeText(this, getString(R.string.added_contact), Toast.LENGTH_SHORT).show()
+            val data = Intent()
+            data.putExtra("msg", getString(R.string.add_contact_success))
+            setResult(RESULT_OK, data)
+            finish()
+        } else {
+            Toast.makeText(this, getString(R.string.name_and_number_cant_null), Toast.LENGTH_SHORT)
+                .show()
         }
-        Toast.makeText(this, getString(R.string.added_contact), Toast.LENGTH_SHORT).show()
-        val data = Intent()
-        data.putExtra("msg", getString(R.string.add_contact_success))
-        setResult(RESULT_OK, data)
-        finish()
     }
 
     private fun setLabelText() {

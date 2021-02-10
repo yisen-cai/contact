@@ -97,6 +97,7 @@ class ContactsFragment : Fragment() {
                 }
             } else {
                 contactDao.getContacts().collect {
+                    contacts.clear()
                     contacts.addAll(it)
                     toggleIncludeView(contacts)
                     // notify UI update
@@ -227,10 +228,9 @@ class ContactsFragment : Fragment() {
                                 importedCount += 1
                             }
                         }
-                        contacts.clear()
                         loadContactsFromDatabase()
                         Toast.makeText(
-                            context!!,
+                            requireContext(),
                             "${getString(R.string.imported_contacts)} $importedCount ${getString(R.string.unit)}",
                             Toast.LENGTH_SHORT
                         ).show()
@@ -263,7 +263,6 @@ class ContactsAdapter(
     private val contacts: MutableList<Contact>,
     private val onRecyclerReachBottomListener: OnRecyclerReachBottomListener
 ) : RecyclerView.Adapter<ContactsAdapter.ViewHolder>() {
-
 
     /**
      * View Item holder, a recycler item
@@ -298,29 +297,29 @@ class ContactsAdapter(
             } else {
                 Glide.with(view).load(contact.avatar).into(avatarImageView)
             }
-            callView.setOnClickListener {
-                val uri = "tel:${contact.number}"
-                val intent = Intent(Intent.ACTION_CALL, Uri.parse(uri))
-//                intent.data = Uri.parse(uri)
-                view.context.startActivity(intent)
-            }
-
-            messageView.setOnClickListener {
-                val uri = "sms:${contact.number}"
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
-                view.context.startActivity(intent)
-            }
+//            callView.setOnClickListener {
+//                val uri = "tel:${contact.number}"
+//                val intent = Intent(Intent.ACTION_CALL, Uri.parse(uri))
+////                intent.data = Uri.parse(uri)
+//                view.context.startActivity(intent)
+//            }
+//
+//            messageView.setOnClickListener {
+//                val uri = "sms:${contact.number}"
+//                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
+//                view.context.startActivity(intent)
+//            }
         }
 
 
         private fun setUpListener(contact: Contact) {
-            contactItem.setOnClickListener {
-                val actions =
-                    ContactsFragmentDirections.actionNavigationContactsToNavigationDetails(
-                        contactNumber = contact.number!!
-                    )
-                it.findNavController().navigate(actions)
-            }
+//            contactItem.setOnClickListener {
+//                val actions =
+//                    ContactsFragmentDirections.actionNavigationContactsToNavigationDetails(
+//                        contactId = contact.id
+//                    )
+//                it.findNavController().navigate(actions)
+//            }
         }
     }
 

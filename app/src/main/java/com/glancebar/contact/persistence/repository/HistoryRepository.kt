@@ -18,8 +18,16 @@ class HistoryRepository(
     private val contactDao: ContactDao = database.getContactDao()
 ) {
 
-    fun insert(history: History):Int {
+    fun insert(history: History): Int {
         return DataAsyncTask(historyDao, contactDao).execute(history, 0).get() as Int
+    }
+
+    fun clearContactHistory(number: String) {
+        DataAsyncTask(historyDao, contactDao).execute(number, 1)
+    }
+
+    fun clearHistory(history: History) {
+        DataAsyncTask(historyDao, contactDao).execute(history, 2)
     }
 
     companion object {
@@ -40,7 +48,10 @@ class HistoryRepository(
                         return 0
                     }
                     1 -> {
-
+                        dao.clearHistory(params[0] as String)
+                    }
+                    2 -> {
+                        dao.delete(params[0] as History)
                     }
                 }
                 return null

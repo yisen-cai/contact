@@ -5,15 +5,16 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -31,6 +32,7 @@ import com.glancebar.contact.persistence.database.AppDatabase
 import com.glancebar.contact.persistence.entity.Contact
 import com.glancebar.contact.persistence.entity.History
 import com.glancebar.contact.persistence.repository.ContactRepository
+import com.glancebar.contact.persistence.repository.HistoryRepository
 import com.glancebar.contact.ui.contacts.ActivityResult
 import com.glancebar.contact.utils.Consts
 import com.glancebar.contact.utils.OnRecyclerReachBottomListener
@@ -45,13 +47,14 @@ class DetailsFragment : Fragment() {
     }
 
     private val args: DetailsFragmentArgs by navArgs()
-    private lateinit var viewModel: DetailsViewModel
     private lateinit var historyRecyclerView: RecyclerView
     private var contactDao: ContactDao = AppDatabase.INSTANCE!!.getContactDao()
     private var contactRepository = ContactRepository(AppDatabase.INSTANCE!!)
+    private var historyRepository = HistoryRepository(AppDatabase.INSTANCE!!)
     private lateinit var binding: DetailsFragmentBinding
     private lateinit var returnCallback: OnBackPressedCallback
     private var favoriteItem: MenuItem? = null
+    private var histories: MutableList<History> = mutableListOf()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,8 +72,7 @@ class DetailsFragment : Fragment() {
     ): View? {
         (requireActivity() as MainActivity).hideNavigator()
         binding = DataBindingUtil.inflate(inflater, R.layout.details_fragment, container, false)
-        viewModel = ViewModelProvider(this).get(DetailsViewModel::class.java)
-        binding.contact = viewModel.contact.value
+        binding.contact = Contact()
         initRecyclerView(binding.root)
         setHasOptionsMenu(true)
         return binding.root
@@ -79,7 +81,7 @@ class DetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpAdapter()
-        loadContactAndHistory(args.contactNumber)
+        loadContactAndHistory(args.contactId)
         setListener()
     }
 
@@ -98,14 +100,14 @@ class DetailsFragment : Fragment() {
                         )
                             .show()
                         favoriteItem?.icon =
-                            ContextCompat.getDrawable(context!!, R.drawable.ic_like)
+                            ContextCompat.getDrawable(requireContext(), R.drawable.ic_like)
                     } else {
                         binding.contact!!.isMarked = 1
                         contactRepository.favorite(binding.contact!!)
                         Toast.makeText(context, getString(R.string.favoriated), Toast.LENGTH_SHORT)
                             .show()
                         favoriteItem?.icon =
-                            ContextCompat.getDrawable(context!!, R.drawable.ic_liked)
+                            ContextCompat.getDrawable(requireContext(), R.drawable.ic_liked)
                     }
                 }
             }
@@ -124,7 +126,7 @@ class DetailsFragment : Fragment() {
                         ) { dialog, id ->
                             contactRepository.delete(contact = binding.contact!!)
                             Toast.makeText(
-                                context!!,
+                                requireContext(),
                                 getString(R.string.delete_success),
                                 Toast.LENGTH_SHORT
                             ).show()
@@ -184,19 +186,48 @@ class DetailsFragment : Fragment() {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
             startActivity(intent)
         }
+        binding.clearHistoryLabel.setOnClickListener {
+            val alertDialog: AlertDialog = requireActivity().let {
+                val builder = AlertDialog.Builder(it)
+                builder.setMessage(getString(R.string.sure_to_clear_history))
+                    .setTitle(R.string.alert)
+                builder.apply {
+                    setPositiveButton(
+                        R.string.ok
+                    ) { dialog, id ->
+                        historyRepository.clearContactHistory(binding.contact!!.number!!)
+                        histories.clear()
+                        loadContactAndHistory(args.contactId)
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.cleared_history),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    setNegativeButton(
+                        R.string.cancel
+                    ) { dialog, id ->
+                        // User cancelled the dialog
+                    }
+                }
+                builder.create()
+            }
+            alertDialog.show()
+        }
     }
 
 
     private fun setUpAdapter() {
         historyRecyclerView.adapter =
             HistoryAdapter(
-                viewModel.histories.value!!,
-                viewModel.contact.value!!,
+                histories,
+                binding.contact,
                 object : OnRecyclerReachBottomListener {
                     override fun onBottomReached(position: Int) {
 
                     }
-                }
+                },
+                historyRepository
             )
     }
 
@@ -206,11 +237,24 @@ class DetailsFragment : Fragment() {
         historyRecyclerView.layoutManager = LinearLayoutManager(context)
     }
 
-    private fun loadContactAndHistory(number: String) {
+    fun setContact(contact: Contact) {
+        val data = binding.contact
+        data?.username = contact.username
+        data?.avatar = contact.avatar
+        data?.email = contact.email
+        data?.telephone = contact.telephone
+        data?.isMarked = contact.isMarked
+        data?.location = contact.location
+        data?.tags = contact.tags
+        data?.number = contact.number
+    }
+
+    private fun loadContactAndHistory(contactId: Long) {
         viewLifecycleOwner.lifecycleScope.launch {
-            contactDao.getAllContactsAndHistoryByName(number).collect { it ->
+            Log.d("Collect error", "loadContactAndHistory: $contactId")
+            contactDao.getAllContactsAndHistoryByName(contactId).collect { it ->
                 it?.contact?.also {
-                    binding.contact = it
+                    setContact(it)
                     if (it.avatar == null) {
                         binding.contactDetailsAvatar.setImageResource(Consts.DEFAULT_AVATAR)
                     } else {
@@ -218,8 +262,9 @@ class DetailsFragment : Fragment() {
                     }
                     if (it.isMarked == 1) {
                         favoriteItem?.icon =
-                            ContextCompat.getDrawable(context!!, R.drawable.ic_liked)
+                            ContextCompat.getDrawable(requireContext(), R.drawable.ic_liked)
                     }
+                    binding.contactDetailsNumber.text = it.number!!
                     val numberInfo = PhoneUtil.getPhoneModel(it.number!!.replace(" ", ""))
                     if (numberInfo == null) {
                         binding.contactDetailsInfo.text = "未知号码"
@@ -228,42 +273,60 @@ class DetailsFragment : Fragment() {
                             PhoneUtil.getPhoneModel(it.number!!.replace(" ", "")).toString()
                     }
                 }
-                it?.histories?.forEach { history ->
-                    viewModel.histories.value?.add(history)
-                }
+                histories.clear()
+                histories.addAll(it!!.histories)
                 historyRecyclerView.adapter?.notifyDataSetChanged()
             }
         }
     }
-
 }
 
 
 class HistoryAdapter(
-    private val histories: List<History>,
-    private val contact: Contact,
-    private val onRecyclerReachBottomListener: OnRecyclerReachBottomListener
+    private val histories: MutableList<History>,
+    private val contact: Contact?,
+    private val onRecyclerReachBottomListener: OnRecyclerReachBottomListener,
+    private val historyRepository: HistoryRepository
 ) : RecyclerView.Adapter<HistoryAdapter.HistoryItemViewHolder>() {
 
-    class HistoryItemViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
+    class HistoryItemViewHolder(
+        private val view: View,
+        private val histories: MutableList<History>,
+        val contact: Contact?,
+        private var adapter: HistoryAdapter,
+        private var historyRepository: HistoryRepository
+    ) : RecyclerView.ViewHolder(view) {
+        private var historyListItem: ConstraintLayout = view.findViewById(R.id.history_list_item)
         private var historyAvatarView: ImageView = view.findViewById(R.id.history_contact_avatar)
         private var contactNameView: TextView = view.findViewById(R.id.history_contact_username)
         private var contactNumberView: TextView =
             view.findViewById(R.id.history_contact_number_info)
+        private var deleteHistoryImageView: ImageView = view.findViewById(R.id.history_delete)
         private var historyTypeView: ImageView = view.findViewById(R.id.history_type)
 
-        fun setData(history: History, contact: Contact) {
-            contactNameView.text = contact.username
-            contactNumberView.text = contact.number
+        fun setData(history: History) {
+            contactNameView.text = contact?.username
+            contactNumberView.text = contact?.number
+            historyListItem.setOnClickListener {
+                val uri = "tel:${contact?.number}"
+                val intent = Intent(Intent.ACTION_CALL, Uri.parse(uri))
+                view.context.startActivity(intent)
+            }
             // avatar
-            Glide.with(view).load(contact.avatar).into(historyAvatarView)
+            Glide.with(view).load(contact?.avatar).into(historyAvatarView)
+            deleteHistoryImageView.setOnClickListener {
+                // TODO: delete and remove
+                histories.remove(history)
+                adapter.notifyDataSetChanged()
+                historyRepository.clearHistory(history)
+            }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistoryItemViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.history_list_item, parent, false)
-        return HistoryItemViewHolder(view)
+        return HistoryItemViewHolder(view, histories, contact, this, historyRepository)
     }
 
     override fun onBindViewHolder(viewHolder: HistoryItemViewHolder, position: Int) {
@@ -271,7 +334,7 @@ class HistoryAdapter(
             onRecyclerReachBottomListener.onBottomReached(position)
         }
 
-        viewHolder.setData(histories[position], contact)
+        viewHolder.setData(histories[position])
     }
 
     override fun getItemCount(): Int {

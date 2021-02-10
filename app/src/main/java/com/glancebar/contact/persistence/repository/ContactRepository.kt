@@ -38,7 +38,6 @@ class ContactRepository(
 
     companion object {
         class DataAsyncTask(val dao: ContactDao) : AsyncTask<Any, Void, Any>() {
-
             override fun doInBackground(vararg params: Any?): Any? {
                 when (params[1]) {
                     1 -> {

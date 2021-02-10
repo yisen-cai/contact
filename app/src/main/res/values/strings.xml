@@ -62,4 +62,8 @@
     <string name="sync_history_tool">Sync call log</string>
     <string name="synced_history">Sync success: </string>
     <string name="sync_item">call logs</string>
+    <string name="name_and_number_cant_null">Contact or number can\'t be empty</string>
+    <string name="clear_history_label">Clear</string>
+    <string name="sure_to_clear_history">Sure to clear?</string>
+    <string name="cleared_history">Clear history success!</string>
 </resources>

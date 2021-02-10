@@ -63,4 +63,8 @@
     <string name="sync_history_tool">同步通话记录</string>
     <string name="synced_history">同步成功：</string>
     <string name="sync_item">条通话记录</string>
+    <string name="name_and_number_cant_null">姓名和手机不可为空</string>
+    <string name="clear_history_label">Clear</string>
+    <string name="sure_to_clear_history">Sure to clear?</string>
+    <string name="cleared_history">Clear history success!</string>
 </resources>

@@ -7,17 +7,20 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.CallLog
 import android.view.*
-import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.glancebar.contact.R
 import com.glancebar.contact.persistence.database.AppDatabase
 import com.glancebar.contact.persistence.entity.Contact
 import com.glancebar.contact.persistence.entity.History
 import com.glancebar.contact.persistence.repository.HistoryRepository
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 
 class HistoryFragment : Fragment() {
@@ -26,9 +29,14 @@ class HistoryFragment : Fragment() {
         fun newInstance() = HistoryFragment()
     }
 
+    // number contact
     private val contactsMap: MutableMap<String, Contact> = mutableMapOf()
     private val historyRepository = HistoryRepository(AppDatabase.INSTANCE!!)
+    private val historyDao = AppDatabase.INSTANCE!!.getHistoryDao()
+    private val contactDao = AppDatabase.INSTANCE!!.getContactDao()
     private var syncCount = 0
+    private var histories: MutableList<History> = mutableListOf()
+    private lateinit var historyRecyclerView: RecyclerView
 
     var columns = arrayOf(
         CallLog.Calls.CACHED_NAME // 通话记录的联系人
@@ -54,16 +62,33 @@ class HistoryFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(HistoryViewModel::class.java)
 
         val root = inflater.inflate(R.layout.history_fragment, container, false)
-//        val textView: TextView = root.findViewById(R.id.text)
-//        viewModel.text.observe(viewLifecycleOwner, {
-//            textView.text = it
-//        })
-
-        val textView: TextView = root.findViewById(R.id.today_history_label)
-        textView.setOnClickListener {
-            findNavController().navigate(R.id.history_navigate_to_contacts)
-        }
+        initRecyclerView(root)
+        loadData()
         return root
+    }
+
+    private fun initRecyclerView(root: View) {
+        historyRecyclerView = root.findViewById(R.id.history_fragment_recycler)
+        historyRecyclerView.layoutManager = LinearLayoutManager(context)
+        historyRecyclerView.adapter =
+            HistoryAdapter(histories, contactsMap)
+    }
+
+    private fun loadData() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            historyDao.findAllLimit(0, 100).collect {
+                histories.clear()
+                histories.addAll(it)
+                historyRecyclerView.adapter?.notifyDataSetChanged()
+            }
+            contactDao.getAllContacts().collect {
+                contactsMap.clear()
+                it.forEach { contact ->
+                    contactsMap[contact.number!!] = contact
+                }
+                historyRecyclerView.adapter?.notifyDataSetChanged()
+            }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -88,7 +113,7 @@ class HistoryFragment : Fragment() {
         // 1.获得ContentResolver
         val resolver = requireActivity().contentResolver
         if (ContextCompat.checkSelfPermission(
-                context!!,
+                requireContext(),
                 Manifest.permission.READ_CALL_LOG
             ) != PackageManager.PERMISSION_GRANTED
         ) {
@@ -119,7 +144,7 @@ class HistoryFragment : Fragment() {
             syncCount += result
         }
         Toast.makeText(
-            context!!,
+            requireContext(),
             "${getString(R.string.synced_history)} $syncCount ${getString(R.string.sync_item)}",
             Toast.LENGTH_SHORT
         )

@@ -47,10 +47,11 @@
         android:name="com.glancebar.contact.ui.details.DetailsFragment"
         android:label="@string/title_detail"
         tools:layout="@layout/details_fragment">
+        <!-- 页面跳转所需参数 -->
         <argument
-            android:name="contactNumber"
-            android:defaultValue="1"
-            app:argType="string" />
+            android:name="contactId"
+            app:argType="long" />
+        <!-- 页面跳转的动作，设置目标页面 -->
         <action
             android:id="@+id/detail_back_to_history"
             app:destination="@id/navigation_history" />

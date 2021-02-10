@@ -8,7 +8,7 @@
     android:layout_marginTop="5dp"
     android:background="@color/white"
     android:clickable="true"
-    android:elevation="2dp"
+    android:elevation="0dp"
     android:focusable="true">
 
     <androidx.cardview.widget.CardView
@@ -16,19 +16,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:background="@drawable/image_radius"
+        app:cardCornerRadius="30dp"
+        app:cardElevation="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/history_contact_avatar"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:contentDescription="@string/contact_avatar_des"
             android:hapticFeedbackEnabled="true"
             android:scaleType="centerCrop"
+            android:src="@drawable/ic_avatar"
             tools:srcCompat="@tools:sample/avatars" />
     </androidx.cardview.widget.CardView>
 
@@ -66,8 +67,8 @@
 
     <ImageView
         android:id="@+id/history_delete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_marginEnd="16dp"
         android:contentDescription="@string/options"
         app:layout_constraintBottom_toBottomOf="parent"

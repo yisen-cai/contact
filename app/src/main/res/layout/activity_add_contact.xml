@@ -15,14 +15,13 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/add_contact_activity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:elevation="3dp"
             tools:context=".ui.add_contact.AddContactFragment">
-
             <ImageView
                 android:id="@+id/add_contact_avatar"
                 android:layout_width="100dp"

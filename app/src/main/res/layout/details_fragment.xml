@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <!-- 视图声明的绑定数据 -->
         <import type="com.glancebar.contact.persistence.entity.Contact" />
 
         <variable
@@ -14,7 +14,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/contact_details"
@@ -146,21 +146,23 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:rotationX="0"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/contact_details_recent_title"
+                tools:itemCount="5"
                 tools:listitem="@layout/history_list_item" />
 
             <TextView
-                android:id="@+id/contact_details_settings_title"
+                android:id="@+id/clear_history_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="15dp"
-                android:text="@string/contact_details_settings_title"
-                android:textSize="15sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/contact_detail_history_recycler" />
+                android:layout_marginEnd="16dp"
+                android:textColor="@color/teal_700"
+                android:text="@string/clear_history_label"
+                app:layout_constraintBottom_toBottomOf="@+id/contact_details_recent_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/contact_details_recent_title" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </layout>
